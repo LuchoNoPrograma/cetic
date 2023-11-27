@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es" layout:decorate="~{/plantilla/plantilla-publica}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>CETIC</title>
+</head>
+<body>
+<div layout:fragment="contenido">
+    <h2>Seleccione la categoria del equipo</h2>
+    <div class="card" th:each="categoria : ${listaCategoria}">
+        <div class="card-title" th:text="${categoria.nombre}"></div>
+        <div class="card-body"></div>
+    </div>
+</div>
+</body>
+</html>
