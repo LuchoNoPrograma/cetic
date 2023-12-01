@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,6 +14,9 @@ import java.util.Date;
 @Entity
 @Table(name = "solicitud")
 public class Solicitud implements Serializable {
+    @OneToMany(mappedBy = "solicitud", fetch = FetchType.LAZY)
+    private List<Reparacion> listaReparacion;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_id_persona", referencedColumnName = "id_persona")
     private Persona persona;

@@ -32,7 +32,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Información del equipo</h4>
                                 <div class="row pt-3">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="control-label" for="categoria">Categoria:</label>
                                             <select class="form-control" id="categoria" th:field="*{categoria}">
@@ -47,14 +47,24 @@
                                         </div>
                                     </div>
                                     <!--/span-->
-                                    <div class="col-md-6">
-                                        <div class="mb-3 has-danger">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
                                             <label class="control-label" for="codSerie">Código serie:</label>
-                                            <input class="form-control form-control-danger" id="codSerie"
+                                            <input class="form-control" id="codSerie"
                                                    placeholder="--ESCRIBA--" th:field="*{codSerie}"/>
-                                            <small class="form-control-feedback">
+                                            <!--<small class="form-control-feedback">
                                                 This field has error.
-                                            </small>
+                                            </small>-->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="control-label" for="codUap">Código UAP:</label>
+                                            <input class="form-control" id="codUap"
+                                                   placeholder="--ESCRIBA--" th:field="*{codUap}"/>
+                                            <!--<small class="form-control-feedback">
+                                                This field has error.
+                                            </small>-->
                                         </div>
                                     </div>
                                     <!--/span-->
@@ -62,9 +72,9 @@
                                 <!--/row-->
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="mb-3 has-success">
+                                        <div class="mb-3">
                                             <label class="control-label" for="marca">Marca: </label>
-                                            <input class="form-control form-control-danger" id="marca"
+                                            <input class="form-control" id="marca"
                                                    placeholder="--ESCRIBA--" th:field="*{marca}"/>
                                             <small class="form-control-feedback">
                                                 This field has error.
@@ -72,9 +82,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="mb-3 has-success">
+                                        <div class="mb-3">
                                             <label class="control-label" for="modelo">Modelo: </label>
-                                            <input class="form-control form-control-danger" id="modelo"
+                                            <input class="form-control" id="modelo"
                                                    placeholder="--ESCRIBA--" th:field="*{modelo}"/>
                                             <small class="form-control-feedback">
                                                 This field has error.
@@ -82,7 +92,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="mb-3 has-success">
+                                        <div class="mb-3">
                                             <label class="control-label" for="color">Color: </label>
                                             <select class="form-control custom-select" id="color" th:field="*{color}">
                                                 <option hidden th:value="null">--SELECCIONE--</option>
@@ -130,17 +140,9 @@
                                             Registrar
                                         </div>
                                     </button>
-                                    <button
-                                            class="
-                            btn btn-danger
-                            rounded-pill
-                            px-4
-                            ms-2
-                            text-white
-                          "
-                                            type="button"
-                                    >
-                                        Cancel
+                                    <button class="btn btn-danger rounded-pill px-4 ms-2 text-white" type="button"
+                                    onclick="window.history.back();">
+                                        Cancelar
                                     </button>
                                 </div>
                             </div>

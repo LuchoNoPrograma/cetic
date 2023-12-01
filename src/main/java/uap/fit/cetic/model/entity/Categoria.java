@@ -21,5 +21,8 @@ public class Categoria implements Serializable {
 
     @Column(name = "nombre", nullable = false, length = 30)
     private String nombre;
+
+    @Column(name = "icono", length= 55)
+    private String icono;
 }
 

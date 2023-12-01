@@ -38,6 +38,7 @@
                             <thead>
                             <tr>
                                 <th>Codigo UAP</th>
+                                <th>Codigo Serie</th>
                                 <th>Categoria</th>
                                 <th>Fecha registro</th>
                                 <th>Detalle</th>
@@ -48,6 +49,7 @@
                             <tbody>
                             <tr th:each="equipo : ${listaEquipo}" th:if="${equipo?.estadoEquipo?.name() != 'ELIMINADO'}">
                                 <td th:text="${equipo.codUap}"></td>
+                                <td th:text="${equipo.codSerie}"></td>
                                 <td th:text="${equipo.categoria.nombre}"></td>
                                 <td th:text="${#temporals.format(equipo.fechaRegistro, 'dd/MM/yyyy')}"></td>
                                 <td th:text="${equipo.marca}"></td>
