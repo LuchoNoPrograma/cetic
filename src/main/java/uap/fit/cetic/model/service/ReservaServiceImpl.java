@@ -20,7 +20,7 @@ public class ReservaServiceImpl implements IReservaService {
 
   @Override
   public List<Reserva> listarTodos() {
-    return reservaDao.findAll(Sort.by("fechaReserva").descending());
+    return reservaDao.findAll(Sort.by("idReserva").descending());
   }
 
   @Override
@@ -31,5 +31,10 @@ public class ReservaServiceImpl implements IReservaService {
   @Override
   public void eliminarPorId(Long id) {
     reservaDao.deleteById(id);
+  }
+
+  @Override
+  public List<Reserva> listarPorNroSolicitud(Long nroSolicitud) {
+    return reservaDao.listarPorNroSolicitud(nroSolicitud);
   }
 }

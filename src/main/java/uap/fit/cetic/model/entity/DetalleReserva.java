@@ -1,5 +1,6 @@
 package uap.fit.cetic.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class DetalleReserva {
   @JoinColumn(name = "id_laboratorio")
   private Laboratorio laboratorio;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "id_reserva")
   private Reserva reserva;

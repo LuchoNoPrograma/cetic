@@ -55,24 +55,22 @@
                 <td th:text="${#temporals.format(solicitud.fechaSolicitud, 'dd/MM/yyyy HH:mm')}"></td>
                 <td th:text="${solicitud.estadoSolicitud}"></td>
                 <td>
+                  <th:block th:if="${solicitud.tipoSolicitud.name() == 'RESERVA_DE_LABORATORIO'}">
+                    <a class="btn btn-info btn-circle"
+                       data-bs-placement="top"
+                       data-bs-toggle="tooltip"
+                       th:href="@{/reserva/solicitud/{nroSolicitud}/agendar(nroSolicitud=${solicitud.nroSolicitud})}"
+                       title="Agendar reserva">
+                      <i class="feather-sm fill-white" data-feather="clock"></i>
+                    </a>
+                  </th:block>
                   <!--ESTOS BOTONES COPIAS Y PEGAS Y LO CAMBIAS POR TUS RUTAS-->
-                  <!--<a class="btn btn-info btn-circle"
-                     data-bs-placement="top"
-                     data-bs-toggle="tooltip"
-                     th:href="@{/equipo/form-modificar/{idEquipo}(idEquipo=${equipo.idEquipo})}"
-                     title="Modificar">
-                    <i class="feather-sm fill-white" data-feather="edit"></i>
-                  </a>-->
                   <button class="btn btn-danger btn-circle"
                           data-bs-placement="top" data-bs-toggle="tooltip"
                           th:attr="onclick='eliminarEquipo(\'' + ${solicitud.nroSolicitud} + '\')'"
                           title="Rechaxar">
                     <i class="feather-sm fill-white" data-feather="x"></i>
                   </button>
-                  <a class="btn btn-outline-secondary btn-circle"
-                     data-bs-placement="top" data-bs-toggle="tooltip" title="Más">
-                    <i class="feather-sm fill-white" data-feather="more-vertical"></i>
-                  </a>
                 </td>
               </tr>
               </tbody>
