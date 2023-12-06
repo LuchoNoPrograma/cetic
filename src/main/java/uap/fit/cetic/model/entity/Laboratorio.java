@@ -23,6 +23,9 @@ public class Laboratorio implements Serializable {
     @Column(name = "nombre", length = 55)
     private String nombre;
 
+    @Column(name = "horario", length = 100)
+    private String horario;
+
     @Column(name = "estado")
     @Enumerated(EnumType.STRING)
     private EstadoLaboratorio estado;
