@@ -46,7 +46,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaEquipo", listaEquipo);-->
+                            <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaLaboratorio", listaLaboratorio);-->
                             <tr th:each="Laboratorio : ${listaLaboratorio}" th:if="${laboratorio.estadoLaboratorio?.name() != 'ELIMINADO'}">
                                 <td th:text="${laboratorio.nombre}"></td>
                                 <td th:text="${laboratorio?.estadoLaboratorio?.nombreFormal}"></td>
