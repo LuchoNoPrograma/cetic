@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -26,6 +27,9 @@ public class Usuario implements Serializable{
     inverseJoinColumns = @JoinColumn(name = "id_permiso")
   )
   private Set<Permiso> listaPermiso;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+  private List<Menu> listaMenus;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
