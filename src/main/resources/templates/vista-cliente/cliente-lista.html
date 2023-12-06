@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{/plantilla/plantilla-admin}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <th:block layout:fragment="head">
+        <link rel="stylesheet" th:href="@{/dist/libs/sweetalert2/dist/sweetalert2.min.css}">
+    </th:block>
+</head>
+<body>
+<div layout:fragment="contenido">
+
+    <div class="row page-titles">
+        <div class="col-md-5 col-12 align-self-center">
+            <h3 class="text-themecolor mb-0">Clientes</h3>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item active">
+                    <a th:href="@{/equipo/lista}">Lista de clientes</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h4 class="mb-0 text-white">Lista de clientes registrados</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="py-2 d-flex justify-content-end">
+                            <!--AQUI TIENE QUE IR LA RUTA DE TU GETMAPPING-->
+                            <a class="btn btn-primary" th:href="@{/equipo/form-registrar}">
+                                Registrar  <i class="feather-sm fill-white" data-feather="file-plus"></i>
+                            </a>
+                        </div>
+                        <table class="table table-bordered table-striped" id="tabla-equipo">
+                            <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellidos</th>
+                                <th>CI</th>
+                                <th>Celular</th>
+                                <th>Email</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaCliente", listaCliente);-->
+                            <tr th:each="cliente : ${listaCliente}" th:if="${cliente?.estadoCliente?.name() != 'ELIMINADO'}">
+                                <td th:text="${cliente.nombre}"></td>
+                                <td th:text="${cliente.apellidos}"></td>
+                                <td th:text="${cliente.CI}"></td>
+                                <td th:text="${cliente.celular}"></td>
+                                <td th:text="${cliente.email}"></td>
+                                <td>
+                                    <!--ESTOS BOTONES COPIAS Y PEGAS Y LO CAMBIAS POR TUS RUTAS-->
+                                    <a class="btn btn-info btn-circle"
+                                       data-bs-placement="top"
+                                       data-bs-toggle="tooltip"
+                                       th:href="@{/cliente/form-modificar/{idCliente}(idCliente=${cliente.idCliente})}"
+                                       title="Modificar">
+                                        <i class="feather-sm fill-white" data-feather="edit"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-circle"
+                                       data-bs-placement="top" data-bs-toggle="tooltip"
+                                       th:attr="onclick='eliminarCliente(\'' + ${cliente.idCliente} + '\')'"
+                                       title="Eliminar">
+                                        <i class="feather-sm fill-white" data-feather="trash-2"></i>
+                                    </button>
+                                    <a class="btn btn-outline-secondary btn-circle"
+                                       data-bs-placement="top" data-bs-toggle="tooltip" title="Más">
+                                        <i class="feather-sm fill-white" data-feather="more-vertical"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--    AQUI TERMINA TU LISTA, LO DEMAS COPIAS Y PEGAS-->
+</div>
+<div layout:fragment="script">
+    <script th:src="@{/dist/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/dist/libs/sweetalert2/dist/sweetalert2.min.js}"></script>
+    <script>
+        $("#tabla-cliente").DataTable();
+
+        //ESTE METODO ES PARA ELIMINAR Y SE ENVIA A TU METODO DE ELIMINAR DEL CONTROLADOR
+        function eliminarCliente(idCliente) {
+            Swal.fire(
+                {
+                    title: "Estás seguro?",
+                    text: "El cliente será eliminado permanentemente!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Si, eliminar!",
+                    cancelButtonText: "No, cancelar",
+                    preConfirm: async () => {
+                        try {
+                            const response = await fetch(`/cliente/${idCliente}`, {method: "DELETE"})
+                            if (!response.ok) throw new Error(response.text());
+                            Swal.fire({
+                                title: "Eliminado!",
+                                text: "El Cliente ha sido eliminado.",
+                                icon: "success",
+                                confirmButtonText: "Entendido",
+                                preConfirm: () => location.reload(),
+                                allowOutsideClick: false,
+                                allowOutsideKey: false
+                            });
+                        } catch (error) {
+                            Swal.showValidationMessage(`Ocurrió un error en la petición: ${error}`);
+                            console.log(error);
+                        }
+                    },
+                    allowOutsideClick: () => !Swal.isLoading(),
+                },
+            );
+        }
+    </script>
+</div>
+</body>
+</html>
