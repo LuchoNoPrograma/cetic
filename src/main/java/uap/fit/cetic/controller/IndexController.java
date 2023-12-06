@@ -1,5 +1,6 @@
 package uap.fit.cetic.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import uap.fit.cetic.model.entity.Equipo;
 import uap.fit.cetic.model.service.IEquipoService;
 import uap.fit.cetic.model.service.IClienteService;
+import uap.fit.cetic.model.service.IMenuService;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -18,6 +20,7 @@ public class IndexController {
   private final DataSource dataSource;
   private final IClienteService personaService;
   private final IEquipoService equipoService;
+  private final IMenuService menuService;
 
 
   /*@GetMapping("/index")
@@ -36,10 +39,10 @@ public class IndexController {
     return "index";
   }*/
 
-  @GetMapping("/index")
-  public String index(Model model) {
+  @GetMapping({"/index", "/", "/inicio", "/home"})
+  public String index(Model model, HttpSession session) {
     List<Equipo> listaEquipo = equipoService.listarTodos();
-    model.addAttribute("listaEquipo", listaEquipo);
+    session.setAttribute("listaMenus", menuService.listarTodos());
     return "index";
   }
 

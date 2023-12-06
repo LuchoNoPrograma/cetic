@@ -19,8 +19,8 @@ public class LaboratorioController {
 
   @GetMapping("/lista")
   public String listar(Model model) {
-    model.addAttribute("listaLAboratorio", laboratorioService.listarTodos());
-    return "laboratorio/lista";
+    model.addAttribute("listaLaboratorio", laboratorioService.listarTodos());
+    return "vista-laboratorio/laboratorio-lista";
   }
    //Este metodo de get es para enviar datos a la vista
   @GetMapping("/form-registrar")
@@ -40,7 +40,7 @@ public class LaboratorioController {
     @PostMapping("/registrar")
   public String registrar(@ModelAttribute Laboratorio laboratorio) {
     laboratorioService.guardar(laboratorio);
-    return "redirect://lista";
+    return "redirect:/laboratorio/lista";
   }
   @ResponseBody
   @DeleteMapping("/{idLaboratorio}")

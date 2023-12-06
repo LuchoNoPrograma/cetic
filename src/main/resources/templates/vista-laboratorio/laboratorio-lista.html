@@ -47,16 +47,16 @@
                             </thead>
                             <tbody>
                             <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaLaboratorio", listaLaboratorio);-->
-                            <tr th:each="Laboratorio : ${listaLaboratorio}" th:if="${laboratorio.estadoLaboratorio?.name() != 'ELIMINADO'}">
+                            <tr th:each="laboratorio : ${listaLaboratorio}">
                                 <td th:text="${laboratorio.nombre}"></td>
-                                <td th:text="${laboratorio?.estadoLaboratorio?.nombreFormal}"></td>
+                                <td th:text="${laboratorio?.estado?.nombreFormal}"></td>
                                 <td>
                                     <!--ESTOS BOTONES COPIAS Y PEGAS Y LO CAMBIAS POR TUS RUTAS-->
                                     <a class="btn btn-info btn-circle"
                                        data-bs-placement="top"
                                        data-bs-toggle="tooltip"
                                        th:href="@{/laboratorio/form-modificar/{idLaboratorio}(idLaboratorio=${laboratorio.idLaboratorio})}"
-                                       title="Laboratorio">
+                                       title="Modificar">
                                         <i class="feather-sm fill-white" data-feather="edit"></i>
                                     </a>
                                     <a class="btn btn-outline-secondary btn-circle"

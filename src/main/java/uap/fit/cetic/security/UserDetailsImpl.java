@@ -1,5 +1,8 @@
 package uap.fit.cetic.security;
 
+public class UserDetailsImpl{}
+
+/**
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -9,10 +12,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import uap.fit.cetic.model.entity.Usuario;
 
-/**
  * Al instanciar la clase se establece SecUsuario y empezar la Conversion
  * a la clase UserDetails para el manejo de Seguridad de SpringSecurity
  */
+/*
 public class UserDetailsImpl implements UserDetails {
 
   private Usuario usuario;
@@ -25,7 +28,8 @@ public class UserDetailsImpl implements UserDetails {
     return usuario.getIdUsuario();
   }
 
-  /**
+  */
+/**
    * Tanto ROLE y AUTHORITY pertenecen a la clase SimpleGrantedAuthority
    *
    * ROLE_ es un prefijo para diferenciar de un
@@ -46,7 +50,8 @@ public class UserDetailsImpl implements UserDetails {
    *
    * @PreAuthorize (hasAuthority("NOMBRE_AUTORIDAD"))    -> NOMBRE_AUTORIDAD
    * @PreAuthorize (hasAnyAuthority("NOMBRE_AUTORIDAD")) -> NOMBRE_AUTORIDAD
-   */
+   *//*
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     Collection<GrantedAuthority> authorities = new HashSet<>();
@@ -87,4 +92,4 @@ public class UserDetailsImpl implements UserDetails {
   public boolean isEnabled() {
     return usuario.getEnabled();
   }
-}
+}*/

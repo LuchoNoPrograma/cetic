@@ -39,24 +39,24 @@
                             <div class="card-body">
                                 <h4 class="card-title">Información del laboratorio</h4>
                                 <div class="row pt-3">
-                                    <div class="col-md-4">
+                                    <!--<div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="control-label" for="categoria">Categoria:</label>
-                                            <!--El th:field="*{categoria}" se refiere a la columna categoria de tu entidad-->
-                                            <select class="form-control" id="categoria" th:field="*{categoria}">
-                                                <option hidden th:value="null">--SELECCIONE--</option>
-                                                <!--Repetir esto por cada categoria en la variable listaCategoria que viene del controlador
+                                            &lt;!&ndash;El th:field="*{categoria}" se refiere a la columna categoria de tu entidad&ndash;&gt;
+                                            <select class="form-control" id="categoria" th:field="*{estado}">
+                                                <option hidden th:value="null">&#45;&#45;SELECCIONE&#45;&#45;</option>
+                                                &lt;!&ndash;Repetir esto por cada categoria en la variable listaCategoria que viene del controlador
                                                 model.addAttribute("listaCategoria", listaCategoria);
-                                                -->
-                                                <option th:each="categoria : ${listaCategoria}"
-                                                        th:text="${categoria.nombreFormal}"
-                                                        th:value="${categoria.name}"></option>
+                                                &ndash;&gt;
+                                                <option th:each="estado : ${T(uap.fit.cetic.model.enums.EstadoLaboratorio)}"
+                                                        th:text="${estado.nombreFormal}"
+                                                        th:value="${estado.name}"></option>
                                             </select>
                                             <small class="form-control-feedback">
                                                 Seleccione la categoria del laboratorio
                                             </small>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <!--/span-->
                                     <div class="col-md-4">
                                         <div class="mb-3">
@@ -82,11 +82,11 @@
                                                  th:each="estadoItem : ${T(uap.fit.cetic.model.enums.EstadoLaboratorio).values()}">
                                                 <input class="form-check-input"
                                                        th:id="'customRadio_' + ${estadoItem}"
-                                                       th:name="estadoLaboratorio"
+                                                       th:name="estado"
                                                        th:value="${estadoItem}"
                                                        type="radio"/>
                                                 <label class="form-check-label text-uppercase"
-                                                       th:data-checked="${estadoItem == laboratorio.estadoLaboratorio} ? 'true' : 'false'"
+                                                       th:data-checked="${estadoItem == laboratorio.estado} ? 'true' : 'false'"
                                                        th:for="'customRadio_' + ${estadoItem}"
                                                        th:text="${estadoItem.nombreFormal}"></label>
                                             </div>

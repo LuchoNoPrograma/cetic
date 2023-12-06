@@ -71,58 +71,76 @@
         <!-- Sidebar navigation-->
         <!-- PREGUNTAR COMO TRAER ESTOS MENUS Y ENLACES DESDE LA BASE DE DATOS CON THYMELEAF Y SPRING BOOT-->
         <nav class="sidebar-nav">
-            <ul id="sidebarnav">
-                <li class="nav-small-cap">
-                    <i class="mdi mdi-dots-horizontal"></i>
-                    <span class="hide-menu">Personal</span>
+          <ul id="sidebarnav">
+            <li th:each="menu : ${session.listaMenus}" class="sidebar-item">
+              <!--th:href="${menu?.ruta}"-->
+              <a aria-expanded="false" class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)">
+                <i class="mdi mdi-gauge"></i>
+                <span class="hide-menu" th:text="${menu.nombre}"></span>
+              </a>
+              <ul aria-expanded="false" class="collapse first-level">
+                <li th:each="enlace : ${menu.listaEnlace}" class="sidebar-item">
+                  <a class="sidebar-link" th:href="@{${enlace.ruta}}">
+                    <i class="mdi mdi-adjust"></i>
+                    <span class="hide-menu" th:text="${enlace.nombre}"> </span>
+                  </a>
                 </li>
-                <li class="sidebar-item">
-                    <a
-                            aria-expanded="false"
-                            class="sidebar-link has-arrow waves-effect waves-dark"
-                            href="javascript:void(0)"
-                    >
-                        <i class="mdi mdi-gauge"></i>
-                        <span class="hide-menu">Equipos </span>
-                    </a>
-                    <ul aria-expanded="false" class="collapse first-level">
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" th:href="@{/equipo/lista}">
-                                <i class="mdi mdi-adjust"></i>
-                                <span class="hide-menu"> Ver equipos </span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" th:href="@{/equipo/form-registrar}">
-                                <i class="mdi mdi-adjust"></i>
-                                <span class="hide-menu"> Registrar equipo </span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" th:href="@{/categoria/form-registrar}">
-                                <i class="mdi mdi-adjust"></i>
-                                <span class="hide-menu"> Registrar categoria </span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-small-cap">
-                    <i class="mdi mdi-dots-horizontal"></i>
-                    <span class="hide-menu">Solicitud</span>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" th:href="@{/solicitud/form-registrar}">
-                        <i class="mdi mdi-adjust"></i>
-                        <span class="hide-menu"> Nueva solicitud </span>
-                    </a>
-                </li>
-              
+              </ul>
+            </li>
+          </ul>
+          
+          <!--<ul id="sidebarnav">
               <li class="nav-small-cap">
-                <i class="mdi mdi-dots-horizontal"></i>
-                <span class="hide-menu">Reservas</span>
+                  <i class="mdi mdi-dots-horizontal"></i>
+                  <span class="hide-menu">Personal</span>
               </li>
-            </ul>
+              <li class="sidebar-item">
+                  <a
+                          aria-expanded="false"
+                          class="sidebar-link has-arrow waves-effect waves-dark"
+                          href="javascript:void(0)"
+                  >
+                      <i class="mdi mdi-gauge"></i>
+                      <span class="hide-menu">Equipos </span>
+                  </a>
+                  <ul aria-expanded="false" class="collapse first-level">
+                      <li class="sidebar-item">
+                          <a class="sidebar-link" th:href="@{/equipo/lista}">
+                              <i class="mdi mdi-adjust"></i>
+                              <span class="hide-menu"> Ver equipos </span>
+                          </a>
+                      </li>
+                      <li class="sidebar-item">
+                          <a class="sidebar-link" th:href="@{/equipo/form-registrar}">
+                              <i class="mdi mdi-adjust"></i>
+                              <span class="hide-menu"> Registrar equipo </span>
+                          </a>
+                      </li>
+                      <li class="sidebar-item">
+                          <a class="sidebar-link" th:href="@{/categoria/form-registrar}">
+                              <i class="mdi mdi-adjust"></i>
+                              <span class="hide-menu"> Registrar categoria </span>
+                          </a>
+                      </li>
+                  </ul>
+              </li>
+
+              <li class="nav-small-cap">
+                  <i class="mdi mdi-dots-horizontal"></i>
+                  <span class="hide-menu">Solicitud</span>
+              </li>
+              <li class="sidebar-item">
+                  <a class="sidebar-link" th:href="@{/solicitud/form-registrar}">
+                      <i class="mdi mdi-adjust"></i>
+                      <span class="hide-menu"> Nueva solicitud </span>
+                  </a>
+              </li>
+            
+            <li class="nav-small-cap">
+              <i class="mdi mdi-dots-horizontal"></i>
+              <span class="hide-menu">Reservas</span>
+            </li>
+          </ul>-->
         </nav>
         <!-- End Sidebar navigation -->
     </div>
