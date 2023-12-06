@@ -7,6 +7,7 @@ import uap.fit.cetic.model.dao.IMotivoDao;
 import uap.fit.cetic.model.entity.Motivo;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,11 @@ public class MotivoServiceImpl implements IMotivoService {
   @Override
   public Motivo buscarPorId(Long id) {
     return motivoDao.findById(id).orElse(null);
+  }
+
+  @Override
+  public Set<Motivo> buscarTodosPorIds(List<Long> ids) {
+    return Set.copyOf(motivoDao.findAllById(ids));
   }
 
   @Override

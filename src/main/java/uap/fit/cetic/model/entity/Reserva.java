@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uap.fit.cetic.model.enums.EstadoReserva;
 
 @Getter
 @Setter
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "reserva")
 public class Reserva {
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "id_solicitud", nullable = false)
   private Solicitud solicitud;
 
@@ -24,4 +25,8 @@ public class Reserva {
 
   @Column(name = "fecha_reserva", nullable = false)
   private String motivo;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "estado_reserva", nullable = false)
+  private EstadoReserva estadoReserva;
 }

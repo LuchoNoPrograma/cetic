@@ -9,25 +9,29 @@
   </th:block>
 </head>
 <body>
-<div layout:fragment="contenido" id="app">
+<div id="app" layout:fragment="contenido">
   <div class="container-fluid">
     <div class="row page-titles">
       <div class="col-12">
         <div class="card">
           <div class="border-bottom title-part-padding">
-            <h3 class="card-title mb-0">Formulario de solicitud de reparación</h3>
+            <h3 class="card-title mb-0">Formulario de solicitudes</h3>
           </div>
           <div class="card-body wizard-content">
             <h6 class="card-subtitle mb-3"></h6>
             <form class="tab-wizard wizard-circle" id="form-solicitud" method="POST"
+                  th:object="${solicitud}"
                   th:action="@{/solicitud/registrar}">
               <!-- Step 1 -->
-              <h5>1. Tipo de solicitud</h5>
               <section>
+                <h5>1. Seleccione su tipo de solicitud</h5>
                 <div class="row">
-                  <input id="tipoSolicitud" type="hidden" v-model="tipoSolicitud">
+                  <input type="hidden" th:field="*{tipoSolicitud}" v-model="tipoSolicitud">
                   <div class="col-md-4">
-                    <div class="card bg-light-primary text-center p-2 rounded" style="cursor: pointer" @click="tipoSolicitud = 'SERVICIO_TECNICO'">
+                    <div :class="tipoSolicitud === 'SERVICIO_TECNICO' ? 'active' : ''"
+                         @click="tipoSolicitud = 'SERVICIO_TECNICO'"
+                         class="card bg-light-primary text-center p-2 rounded"
+                         style="cursor: pointer">
                       <div class="card-text">
                                                 <span class="mdi mdi-wrench" style="font-size: 3em">
                                                 </span>
@@ -39,7 +43,10 @@
                   </div>
                   
                   <div class="col-md-4">
-                    <div class="card bg-light-primary text-center p-2 rounded" style="cursor: pointer" @click="tipoSolicitud = 'RESERVA_DE_LABORATORIO'">
+                    <div :class="tipoSolicitud === 'RESERVA_DE_LABORATORIO' ? 'active' : ''"
+                         @click="tipoSolicitud = 'RESERVA_DE_LABORATORIO'"
+                         class="card bg-light-primary text-center p-2 rounded"
+                         style="cursor: pointer">
                       <div class="card-text">
                                                 <span class="mdi mdi-clock" style="font-size: 3em">
                                                 </span>
@@ -53,25 +60,19 @@
                 </div>
               </section>
               
-              <h5>1. Información personal</h5>
               <section>
+                <h5>2. Información personal</h5>
                 <div class="row">
                   <div class="col-md-4">
                     <div class="mb-3">
                       <label for="nombres">Nombres :</label>
-                      <input class="form-control" id="nombres" type="text"/>
+                      <input class="form-control" id="nombres" th:field="*{cliente.nombre}" type="text"/>
                     </div>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-8">
                     <div class="mb-3">
-                      <label for="paterno">Apellido paterno :</label>
-                      <input class="form-control" id="paterno" type="text"/>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="mb-3">
-                      <label for="materno">Apellido materno :</label>
-                      <input class="form-control" id="materno" type="text"/>
+                      <label for="paterno">Apellidos :</label>
+                      <input class="form-control" id="paterno" th:field="*{cliente.apellidos}" type="text"/>
                     </div>
                   </div>
                 </div>
@@ -79,31 +80,31 @@
                   <div class="col-md-4">
                     <div class="mb-3">
                       <label for="ci">CI :</label>
-                      <input class="form-control" id="ci" type="tel"/>
+                      <input class="form-control" id="ci" th:field="*{cliente.ci}" type="tel"/>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="mb-3">
                       <label for="celular">N° Celular :</label>
-                      <input class="form-control" id="celular" type="tel"/>
+                      <input class="form-control" id="celular" type="tel" th:field="*{cliente.celular}"/>
                     </div>
                   </div>
                 </div>
               </section>
               
-              <h5>2. Datos de la reserva</h5>
-              <section>
+              <section v-if="tipoSolicitud === 'RESERVA_DE_LABORATORIO'">
+                <h5>3. Datos de la reserva</h5>
                 <div class="row">
-                  <div class="col-md-6">
-                    <label for="motivo">Motivo de la reserva:</label>
-                    <textarea class="form-control" id="motivo"
+                  <div class="col-md-12">
+                    <label for="motivo">Motivo de la reserva: (Escriba el nombre de su actividad a realizar)</label>
+                    <textarea class="form-control" id="motivo" name="motivoReserva"
                               rows="3"></textarea>
                   </div>
                 </div>
               </section>
               
-              <h5>2. Datos de la solicitud</h5>
-              <section>
+              <section v-else-if="tipoSolicitud === 'SERVICIO_TECNICO'">
+                <h5>3. Datos de la solicitud</h5>
                 <div class="row">
                   <div class="col-md-12">
                     <label>Indique el motivo de su solicitud : (Marque las casillas)</label>
@@ -116,23 +117,29 @@
                           <th:block th:each="motivo : ${tipoServicio.listaMotivo}">
                             <label class="mx-2 bg-light-info px-2 py-1 rounded-pill" style="cursor: pointer;">
                               <span th:text="${motivo.nombre}"></span>
-                              <input type="checkbox">
+                              <input class="ms-1" type="checkbox" name="motivosSeleccionados" th:value="${motivo.idMotivo}">
                             </label>
                           </th:block>
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12">
-                      <div class="card-title bg-info text-white">
-                        <label class="mx-2" for="descripcion">Descripción</label>
-                        <textarea class="form-control" id="descripcion"></textarea>
-                      </div>
-                    </div>
+                  </div>
+                </div>r
+              </section>
+              
+              <section>
+                <h5>4. Descripción de la solicitud</h5>
+                <label v-if="tipoSolicitud === 'RESERVA_DE_LABORATORIO'">Describa en que fechas requiere y a que hora, si es necesario, el nombre del laboratorio</label>
+                <label v-else-if="tipoSolicitud === 'SERVICIO_TECNICO'">Describa algún dato adicional si lo requiere</label>
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="descripcion"></label>
+                    <textarea class="form-control" id="descripcion" th:field="*{descripcion}"></textarea>
                   </div>
                 </div>
               </section>
               
-              <button class="btn btn-success rounded-pill px-4" type="submit">
+              <button class="btn btn-success rounded-pill px-4 mt-4" type="submit">
                 <div class="d-flex align-items-center">
                   <i class="feather-sm me-1 fill-icon" data-feather="save"></i>
                   Enviar solicitud
@@ -147,8 +154,19 @@
 </div>
 
 <div layout:fragment="script">
+  <style>
+    section{
+      margin-top: 1em;
+      border-bottom: #d2d2d2 solid 3px;
+    }
+    
+    .active {
+      --bs-bg-opacity: 1;
+      background-color: rgb(199, 195, 227) !important;
+    }
+  </style>
   <script>
-    const { createApp, ref } = Vue
+    const {createApp, ref} = Vue
     
     createApp({
       setup() {

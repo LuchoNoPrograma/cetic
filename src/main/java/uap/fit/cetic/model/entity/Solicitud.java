@@ -19,7 +19,7 @@ import java.util.Set;
 @Entity
 @Table(name = "solicitud")
 public class Solicitud implements Serializable {
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "id_persona")
   private Cliente cliente;
 

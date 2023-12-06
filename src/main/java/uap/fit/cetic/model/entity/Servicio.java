@@ -38,6 +38,6 @@ public class Servicio implements Serializable {
     @Column(name = "diagnostico")
     private String diagnostico;
 
-    @Column(name = "descripcion")
-    private String descripcion;
+    @Column(name = "observacion")
+    private String observacion;
 }
