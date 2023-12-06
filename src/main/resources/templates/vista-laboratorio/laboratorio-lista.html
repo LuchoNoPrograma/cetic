@@ -1,10 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" layout:decorate="~{/plantilla/plantilla-admin}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Title</title>
+    <th:block layout:fragment="head">
+        <link rel="stylesheet" th:href="@{/dist/libs/sweetalert2/dist/sweetalert2.min.css}">
+    </th:block>
 </head>
 <body>
+<div layout:fragment="contenido">
 
+    <!--AQUI COMIENZAS TU LISTA, LO DEMAS COPIAS Y PEGAS-->
+    <div class="row page-titles">
+        <div class="col-md-5 col-12 align-self-center">
+            <h3 class="text-themecolor mb-0">Laboratorios</h3>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item active">
+                    <a th:href="@{/laboratorio/lista}">Lista de Laboratorios</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h4 class="mb-0 text-white">Lista de Laboratorios registrados</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="py-2 d-flex justify-content-end">
+                            <!--AQUI TIENE QUE IR LA RUTA DE TU GETMAPPING-->
+                            <a class="btn btn-primary" th:href="@{/laboratorio/form-registrar}">
+                                Registrar  <i class="feather-sm fill-white" data-feather="file-plus"></i>
+                            </a>
+                        </div>
+                        <table class="table table-bordered table-striped" id="tabla-laboratorio">
+                            <thead>
+                            <tr>
+                                <th>Nombre de Laboratorio</th>
+                                <th>Estado de Laboratorio</th>
+                                <th>Horario de Laboratorio</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaEquipo", listaEquipo);-->
+                            <tr th:each="Laboratorio : ${listaLaboratorio}" th:if="${laboratorio.estadoLaboratorio?.name() != 'ELIMINADO'}">
+                                <td th:text="${laboratorio.nombre}"></td>
+                                <td th:text="${laboratorio?.estadoLaboratorio?.nombreFormal}"></td>
+                                <td>
+                                    <!--ESTOS BOTONES COPIAS Y PEGAS Y LO CAMBIAS POR TUS RUTAS-->
+                                    <a class="btn btn-info btn-circle"
+                                       data-bs-placement="top"
+                                       data-bs-toggle="tooltip"
+                                       th:href="@{/laboratorio/form-modificar/{idLaboratorio}(idLaboratorio=${laboratorio.idLaboratorio})}"
+                                       title="Laboratorio">
+                                        <i class="feather-sm fill-white" data-feather="edit"></i>
+                                    </a>
+                                    <a class="btn btn-outline-secondary btn-circle"
+                                       data-bs-placement="top" data-bs-toggle="tooltip" title="Más">
+                                        <i class="feather-sm fill-white" data-feather="more-vertical"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script th:src="@{/dist/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/dist/libs/sweetalert2/dist/sweetalert2.min.js}"></script>
+</div>
 </body>
 </html>
