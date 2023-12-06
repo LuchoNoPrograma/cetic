@@ -16,7 +16,7 @@ public class ServicioServiceImpl implements IServicioService {
 
   @Override
   public Servicio buscarPorId(Long id) {
-    return servicioDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Registro no encontrado con el id: " + id));
+    return servicioDao.findById(id).orElse(null);
   }
 
   @Override

@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "pago")
 public class Pago implements Serializable {
   @ManyToOne
-  @JoinColumn(name = "fk_id_solicitud", nullable = false, referencedColumnName = "id_solicitud")
+  @JoinColumn(name = "id_solicitud", nullable = false)
   private Solicitud solicitud;
 
   @Id
@@ -26,9 +26,6 @@ public class Pago implements Serializable {
   @Column(name = "fecha_pago", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
   private Date fechaPago;
-
-  @Column(name = "estado", length = 55)
-  private String estado;
 
   @Column(name = "monto", nullable = false)
   private Float monto;

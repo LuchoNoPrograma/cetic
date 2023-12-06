@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uap.fit.cetic.model.dao.ISolicitudDao;
 import uap.fit.cetic.model.entity.Solicitud;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -16,7 +17,7 @@ public class SolicitudServiceImpl implements ISolicitudService {
 
   @Override
   public Solicitud buscarPorId(Long id) {
-    return solicitudDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Registro no encontrado con el id: " + id));
+    return solicitudDao.findById(id).orElse(null);
   }
 
   @Override
@@ -26,6 +27,9 @@ public class SolicitudServiceImpl implements ISolicitudService {
 
   @Override
   public Solicitud guardar(Solicitud entidad) {
+    if(entidad.getFechaSolicitud() == null){
+      entidad.setFechaSolicitud(LocalDateTime.now());
+    }
     return solicitudDao.save(entidad);
   }
 

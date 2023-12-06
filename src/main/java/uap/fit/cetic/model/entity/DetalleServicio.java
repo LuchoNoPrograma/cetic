@@ -11,17 +11,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "motivo")
-public class Motivo {
+@Table(name = "detalle_servicio")
+public class DetalleServicio {
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "fk_id_servicio", referencedColumnName = "id_servicio", nullable = false)
+  @JoinColumn(name = "id_servicio")
   private Servicio servicio;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id_motivo", nullable = false)
-  private Long idMotivo;
+  @Column(name = "id_detalle_servicio", nullable = false)
+  private Long idDetalleServicio;
 
-  @Column(name = "nombre", columnDefinition = "TEXT")
-  private String nombre;
+  @Column(name = "costo", nullable = false)
+  private Float costo;
+
+  @Column(name = "descripcion", length = 155)
+  private String descripcion;
 }

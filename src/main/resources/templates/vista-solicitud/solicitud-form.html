@@ -9,285 +9,299 @@
 <div layout:fragment="contenido">
     <div class="container-fluid">
         <div class="row page-titles">
-            <h2>Seleccione la categoria del equipo</h2>
-            <div class="row">
-                <div class="card col-lg-3 col-md-4 col-sm-4 mx-2" th:each="categoria : ${listaCategoria}">
-                    <div class="card-title" th:text="${categoria.nombre}"></div>
-                    <div class="card-body">
-                        <i class="mdi" th:classappend="${categoria.icono}" style="font-size: 3em"></i>
+            <div class="col-12">
+                <div class="card">
+                    <div class="border-bottom title-part-padding">
+                        <h3 class="card-title mb-0">Formulario de solicitud de reparación</h3>
                     </div>
-                </div>
-            </div>
+                    <div class="card-body wizard-content">
+                        <h6 class="card-subtitle mb-3"></h6>
+                        <form action="#" class="tab-wizard wizard-circle" id="form-solicitud">
+                            <!-- Step 1 -->
+                            <h5>1. Información personal</h5>
+                            <section>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="nombres">Nombres :</label>
+                                            <input class="form-control" id="nombres" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="paterno">Apellido paterno :</label>
+                                            <input class="form-control" id="paterno" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="materno">Apellido materno :</label>
+                                            <input class="form-control" id="materno" type="text"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="ci">CI :</label>
+                                            <input class="form-control" id="ci" type="tel"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="celular">N° Celular :</label>
+                                            <input class="form-control" id="celular" type="tel"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <!-- Step 2 -->
+                            <h5>Información de los equipos</h5>
+                            <section>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="categoria">Categoria del equipo :</label>
+                                        <input id="categoria" type="hidden">
+                                        <div class="d-flex flex-wrap align-content-center gap-2">
+                                            <div class="bg-light-primary text-center p-2 rounded"
+                                                 style="max-width: 7em; cursor: pointer"
+                                                 th:each="categoria : ${listaCategoria}">
+                                                <h6 style="height: 2em" th:text="${categoria.nombre}"></h6>
+                                                <span><i class="mdi" style="font-size: 3em"
+                                                         th:classappend="${categoria.icono}"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
 
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="border-bottom title-part-padding">
-                            <h3 class="card-title mb-0">Formulario de solicitud de reparación</h3>
-                        </div>
-                        <div class="card-body wizard-content">
-                            <h6 class="card-subtitle mb-3"></h6>
-                            <form action="#" class="tab-wizard wizard-circle" id="form-solicitud">
-                                <!-- Step 1 -->
-                                <h5>Información personal</h5>
-                                <section>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="nombres">Nombres :</label>
-                                                <input type="text" class="form-control" id="nombres"/>
+                                    <label for="videoUrl1">Indique el motivo de su solicitud : (Marque las
+                                        casillas)</label>
+                                    <div class="col-md-12" th:each="servicio: ${listaServicio}">
+                                        <div class="card border border-info border-2">
+                                            <div class="card-title bg-info text-white">
+                                                <span th:text="${servicio.nombre}" class="mx-2"></span>
                                             </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="paterno">Apellido paterno :</label>
-                                                <input type="text" class="form-control" id="paterno"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label for="materno">Apellido materno :</label>
-                                                <input type="text" class="form-control" id="materno"/>
+                                            <div class="card-text px-2">
+                                                <th:block th:each="motivo : ${servicio.listaMotivo}">
+                                                    <label class="mx-2 bg-light-info px-2 py-1 rounded-pill" style="cursor: pointer;">
+                                                        <span th:text="${motivo.nombre}"></span>
+                                                        <input type="checkbox">
+                                                    </label>
+                                                </th:block>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="celular">N° Celular :</label>
-                                                <input type="tel" class="form-control" id="celular"/>
-                                            </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="shortDescription1"
+                                            >Job Description :</label
+                                            >
+                                            <textarea class="form-control" id="shortDescription1"
+                                                      name="shortDescription"
+                                                      rows="6"></textarea>
                                         </div>
                                     </div>
-                                </section>
-                                <!-- Step 2 -->
-                                <h4>Información de equipos</h4>
-                                <section>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="jobTitle1">Equipo :</label>
-                                                <input type="text" class="form-control" id="jobTitle1"/>
-                                            </div>
+                                </div>
+                            </section>
+                            <!-- Step 3 -->
+                            <h5>Interview</h5>
+                            <section>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="int1">Interview For :</label>
+                                            <input class="form-control" id="int1" type="text"/>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="videoUrl1">Indique el motivo de su solicitud : (Marque las casillas)</label>
-                                                <input type="text" class="form-control" id="videoUrl1"/>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label for="intType1">Interview Type :</label>
+                                            <select
+                                                    class="form-select"
+                                                    data-placeholder="Type to search cities"
+                                                    id="intType1"
+                                                    name="intType1"
+                                            >
+                                                <option value="Banquet">Normal</option>
+                                                <option value="Fund Raiser">Difficult</option>
+                                                <option value="Dinner Party">Hard</option>
+                                            </select>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label for="shortDescription1"
-                                                >Job Description :</label
-                                                >
-                                                <textarea name="shortDescription" id="shortDescription1" rows="6" class="form-control"></textarea>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label for="Location1">Location :</label>
+                                            <select
+                                                    class="form-select"
+                                                    id="Location1"
+                                                    name="location"
+                                            >
+                                                <option value="">Select City</option>
+                                                <option value="India">India</option>
+                                                <option value="USA">USA</option>
+                                                <option value="Dubai">Dubai</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </section>
-                                <!-- Step 3 -->
-                                <h6>Interview</h6>
-                                <section>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="int1">Interview For :</label>
-                                                <input type="text" class="form-control" id="int1" />
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="intType1">Interview Type :</label>
-                                                <select
-                                                        class="form-select"
-                                                        id="intType1"
-                                                        data-placeholder="Type to search cities"
-                                                        name="intType1"
-                                                >
-                                                    <option value="Banquet">Normal</option>
-                                                    <option value="Fund Raiser">Difficult</option>
-                                                    <option value="Dinner Party">Hard</option>
-                                                </select>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="Location1">Location :</label>
-                                                <select
-                                                        class="form-select"
-                                                        id="Location1"
-                                                        name="location"
-                                                >
-                                                    <option value="">Select City</option>
-                                                    <option value="India">India</option>
-                                                    <option value="USA">USA</option>
-                                                    <option value="Dubai">Dubai</option>
-                                                </select>
-                                            </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="jobTitle2">Interview Date :</label>
+                                            <input
+                                                    class="form-control"
+                                                    id="jobTitle2"
+                                                    type="date"
+                                            />
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="jobTitle2">Interview Date :</label>
-                                                <input
-                                                        type="date"
-                                                        class="form-control"
-                                                        id="jobTitle2"
-                                                />
-                                            </div>
-                                            <div class="mb-3">
-                                                <label>Requirements :</label>
-                                                <div class="c-inputs-stacked">
-                                                    <div class="form-check">
-                                                        <input
-                                                                type="radio"
-                                                                id="customRadio6"
-                                                                name="customRadio"
-                                                                class="form-check-input"
-                                                        />
-                                                        <label
-                                                                class="form-check-label"
-                                                                for="customRadio6"
-                                                        >Employee</label
-                                                        >
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input
-                                                                type="radio"
-                                                                id="customRadio7"
-                                                                name="customRadio"
-                                                                class="form-check-input"
-                                                        />
-                                                        <label
-                                                                class="form-check-label"
-                                                                for="customRadio7"
-                                                        >Contract</label
-                                                        >
-                                                    </div>
+                                        <div class="mb-3">
+                                            <label>Requirements :</label>
+                                            <div class="c-inputs-stacked">
+                                                <div class="form-check">
+                                                    <input
+                                                            class="form-check-input"
+                                                            id="customRadio6"
+                                                            name="customRadio"
+                                                            type="radio"
+                                                    />
+                                                    <label
+                                                            class="form-check-label"
+                                                            for="customRadio6"
+                                                    >Employee</label
+                                                    >
+                                                </div>
+                                                <div class="form-check">
+                                                    <input
+                                                            class="form-check-input"
+                                                            id="customRadio7"
+                                                            name="customRadio"
+                                                            type="radio"
+                                                    />
+                                                    <label
+                                                            class="form-check-label"
+                                                            for="customRadio7"
+                                                    >Contract</label
+                                                    >
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </section>
-                                <!-- Step 4 -->
-                                <h6>Remark</h6>
-                                <section>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="behName1">Behaviour :</label>
-                                                <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="behName1"
-                                                />
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="participants1">Confidance</label>
-                                                <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="participants1"
-                                                />
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="participants1">Result</label>
-                                                <select
-                                                        class="form-select"
-                                                        id="participants1"
-                                                        name="location"
-                                                >
-                                                    <option value="">Select Result</option>
-                                                    <option value="Selected">Selected</option>
-                                                    <option value="Rejected">Rejected</option>
-                                                    <option value="Call Second-time">
-                                                        Call Second-time
-                                                    </option>
-                                                </select>
-                                            </div>
+                                </div>
+                            </section>
+                            <!-- Step 4 -->
+                            <h5>Remark</h5>
+                            <section>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="behName1">Behaviour :</label>
+                                            <input
+                                                    class="form-control"
+                                                    id="behName1"
+                                                    type="text"
+                                            />
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="decisions1">Comments</label>
-                                                <textarea
-                                                        name="decisions"
-                                                        id="decisions1"
-                                                        rows="4"
-                                                        class="form-control"
-                                                ></textarea>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label>Rate Interviwer :</label>
-                                                <div class="c-inputs-stacked">
-                                                    <div class="form-check">
-                                                        <input
-                                                                type="radio"
-                                                                id="customRadio1"
-                                                                name="customRadio"
-                                                                class="form-check-input"
-                                                        />
-                                                        <label
-                                                                class="form-check-label"
-                                                                for="customRadio1"
-                                                        >1 star</label
-                                                        >
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input
-                                                                type="radio"
-                                                                id="customRadio2"
-                                                                name="customRadio"
-                                                                class="form-check-input"
-                                                        />
-                                                        <label
-                                                                class="form-check-label"
-                                                                for="customRadio2"
-                                                        >2 star</label
-                                                        >
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input
-                                                                type="radio"
-                                                                id="customRadio3"
-                                                                name="customRadio"
-                                                                class="form-check-input"
-                                                        />
-                                                        <label
-                                                                class="form-check-label"
-                                                                for="customRadio3"
-                                                        >3 star</label
-                                                        >
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input
-                                                                type="radio"
-                                                                id="customRadio4"
-                                                                name="customRadio"
-                                                                class="form-check-input"
-                                                        />
-                                                        <label
-                                                                class="form-check-label"
-                                                                for="customRadio4"
-                                                        >4 star</label
-                                                        >
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input
-                                                                type="radio"
-                                                                id="customRadio5"
-                                                                name="customRadio"
-                                                                class="form-check-input"
-                                                        />
-                                                        <label
-                                                                class="form-check-label"
-                                                                for="customRadio5"
-                                                        >5 star</label
-                                                        >
-                                                    </div>
+                                        <div class="mb-3">
+                                            <label for="participants1">Confidance</label>
+                                            <input
+                                                    class="form-control"
+                                                    id="participants1"
+                                                    type="text"
+                                            />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="participants1">Result</label>
+                                            <select
+                                                    class="form-select"
+                                                    id="participants1"
+                                                    name="location"
+                                            >
+                                                <option value="">Select Result</option>
+                                                <option value="Selected">Selected</option>
+                                                <option value="Rejected">Rejected</option>
+                                                <option value="Call Second-time">
+                                                    Call Second-time
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="decisions1">Comments</label>
+                                            <textarea
+                                                    class="form-control"
+                                                    id="decisions1"
+                                                    name="decisions"
+                                                    rows="4"
+                                            ></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Rate Interviwer :</label>
+                                            <div class="c-inputs-stacked">
+                                                <div class="form-check">
+                                                    <input
+                                                            class="form-check-input"
+                                                            id="customRadio1"
+                                                            name="customRadio"
+                                                            type="radio"
+                                                    />
+                                                    <label
+                                                            class="form-check-label"
+                                                            for="customRadio1"
+                                                    >1 star</label
+                                                    >
+                                                </div>
+                                                <div class="form-check">
+                                                    <input
+                                                            class="form-check-input"
+                                                            id="customRadio2"
+                                                            name="customRadio"
+                                                            type="radio"
+                                                    />
+                                                    <label
+                                                            class="form-check-label"
+                                                            for="customRadio2"
+                                                    >2 star</label
+                                                    >
+                                                </div>
+                                                <div class="form-check">
+                                                    <input
+                                                            class="form-check-input"
+                                                            id="customRadio3"
+                                                            name="customRadio"
+                                                            type="radio"
+                                                    />
+                                                    <label
+                                                            class="form-check-label"
+                                                            for="customRadio3"
+                                                    >3 star</label
+                                                    >
+                                                </div>
+                                                <div class="form-check">
+                                                    <input
+                                                            class="form-check-input"
+                                                            id="customRadio4"
+                                                            name="customRadio"
+                                                            type="radio"
+                                                    />
+                                                    <label
+                                                            class="form-check-label"
+                                                            for="customRadio4"
+                                                    >4 star</label
+                                                    >
+                                                </div>
+                                                <div class="form-check">
+                                                    <input
+                                                            class="form-check-input"
+                                                            id="customRadio5"
+                                                            name="customRadio"
+                                                            type="radio"
+                                                    />
+                                                    <label
+                                                            class="form-check-label"
+                                                            for="customRadio5"
+                                                    >5 star</label
+                                                    >
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </section>
-                            </form>
-                        </div>
+                                </div>
+                            </section>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -296,11 +310,23 @@
 </div>
 
 <div layout:fragment="script">
-    <script th:src="@{/libs/jquery-steps/build/jquery.steps.min.js}"></script>
+    <script th:src="@{/dist/libs/jquery-steps/build/jquery.steps.min.js}"></script>
     <script>
-        $("#form-solicitud").steps({
-
-        })
+        /*        $("#form-solicitud").steps({
+                    headerTag: "h5",
+                    bodyTag: "section",
+                    transitionEffect: "fade",
+                    titleTemplate: '<span class="step">#index#</span> #title#',
+                    labels: {
+                        finish: "Submit",
+                    },
+                    onFinished: function (event, currentIndex) {
+                        swal(
+                            "Form Submitted!",
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lorem erat eleifend ex semper, lobortis purus sed."
+                        );
+                    },
+                })*/
     </script>
 </div>
 </body>

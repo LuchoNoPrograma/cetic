@@ -16,7 +16,7 @@ public class TecnicoServiceImpl implements ITecnicoService {
 
   @Override
   public Tecnico buscarPorId(Long id) {
-    return tecnicoDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Registro no encontrado con el id: " + id));
+    return tecnicoDao.findById(id).orElse(null);
   }
 
   @Override

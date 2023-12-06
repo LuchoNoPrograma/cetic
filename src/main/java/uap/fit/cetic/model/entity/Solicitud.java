@@ -2,8 +2,11 @@ package uap.fit.cetic.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import uap.fit.cetic.model.enums.EstadoServicio;
+import uap.fit.cetic.model.enums.EstadoSolicitud;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -14,23 +17,27 @@ import java.util.List;
 @Entity
 @Table(name = "solicitud")
 public class Solicitud implements Serializable {
-    @OneToMany(mappedBy = "solicitud", fetch = FetchType.LAZY)
-    private List<Reparacion> listaReparacion;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_reserva")
+    private Reserva reserva;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_id_persona", referencedColumnName = "id_persona")
-    private Persona persona;
+    @JoinColumn(name = "id_persona")
+    private Cliente cliente;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_solicitud")
-    private Long idSolicitud;
+    @Column(name = "nro_solicitud")
+    private Long nroSolicitud;
 
     @Column(name = "fecha_solicitud", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date fechaSolicitud;
+    private LocalDateTime fechaSolicitud;
 
     @Column(name = "observacion", length = 256)
     private String observacion;
+
+    @Column(name = "estado_solicitud", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EstadoSolicitud estadoSolicitud;
 }
 

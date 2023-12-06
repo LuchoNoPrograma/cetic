@@ -11,26 +11,23 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "persona")
-public class Persona {
+@Table(name = "cliente")
+public class Cliente {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id_persona", nullable = false, unique = true)
+  @Column(name = "id_persona", nullable = false)
   private Long idPersona;
 
   @Column(name = "nombre", nullable = false, length = 30)
   private String nombre;
 
-  @Column(name = "paterno", nullable = false, length = 30)
-  private String paterno;
+  @Column(name = "apellidos", nullable = false, length = 75)
+  private String apellidos;
 
-  @Column(name = "materno", length = 30)
-  private String materno;
-
-  @Column(name = "ci", length = 30, nullable = false)
+  @Column(name = "ci", nullable = false, length = 30)
   private String ci;
 
-  @Column(name = "celular", length = 10)
+  @Column(name = "celular", nullable = false, length = 10)
   private String celular;
 
   @Column(name = "email", length = 55)

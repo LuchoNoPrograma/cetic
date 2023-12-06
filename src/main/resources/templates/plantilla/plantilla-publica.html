@@ -1,11 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<!DOCTYPE html>
 <html dir="ltr" lang="es" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="utf-8"/>
@@ -112,6 +105,7 @@
 <!-- End Wrapper -->
 <!-- ============================================================== -->
 <div class="chat-windows"></div>
+<div layout:fragment="styles-fondo"></div>
 <!-- ============================================================== -->
 <!-- All Jquery -->
 <!-- ============================================================== -->
@@ -134,8 +128,5 @@
 <script th:src="@{/dist/js/custom.min.js}"></script>
 
 <div layout:fragment="script"></div>
-</body>
-</html>
-
 </body>
 </html>

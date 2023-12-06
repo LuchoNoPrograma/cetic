@@ -1,14 +1,11 @@
 package uap.fit.cetic.model.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uap.fit.cetic.model.dao.IEquipoDao;
 import uap.fit.cetic.model.entity.Equipo;
-import uap.fit.cetic.model.enums.EstadoEquipo;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,24 +15,21 @@ public class EquipoServiceImpl implements IEquipoService {
 
   @Override
   public Equipo buscarPorId(Long id) {
-    return equipoDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Equipo no encontrado con el id: " + id));
+    return equipoDao.findById(id).orElse(null);
   }
 
   @Override
   public List<Equipo> listarTodos() {
-    return equipoDao.findAll(Sort.by(Sort.Direction.DESC, "fechaRegistro"));
+    return equipoDao.findAll(Sort.by(Sort.Direction.DESC, "codSerie"));
   }
 
   @Override
   public Equipo guardar(Equipo entidad) {
-    if(entidad.getFechaRegistro() == null) entidad.setFechaRegistro(LocalDateTime.now());
     return equipoDao.save(entidad);
   }
 
   @Override
   public void eliminarPorId(Long id) {
-    Equipo equipo = equipoDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Equipo no encontrado con el id: " + id));
-    equipo.setEstadoEquipo(EstadoEquipo.ELIMINADO);
-    equipoDao.save(equipo);
+    equipoDao.deleteById(id);
   }
 }

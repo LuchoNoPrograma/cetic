@@ -16,7 +16,7 @@ public class LaboratorioServiceImpl implements ILaboratorioService {
 
   @Override
   public Laboratorio buscarPorId(Long id) {
-    return laboratorioDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Laboratorio no encontrado con el id: " + id));
+    return laboratorioDao.findById(id).orElse(null);
   }
 
   @Override

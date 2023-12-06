@@ -16,12 +16,12 @@ public class PagoServiceImpl implements IPagoService {
 
   @Override
   public Pago buscarPorId(Long id) {
-    return pagoDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Registro no encontrado con el id: "+id));
+    return pagoDao.findById(id).orElse(null);
   }
 
   @Override
   public List<Pago> listarTodos() {
-    return pagoDao.findAll(Sort.by("fechaPago").descending());
+    return pagoDao.findAll(Sort.by("idReserva").descending());
   }
 
   @Override

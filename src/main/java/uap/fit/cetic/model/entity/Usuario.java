@@ -1,7 +1,10 @@
 package uap.fit.cetic.model.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -14,14 +17,13 @@ import java.util.Set;
 @Table(name = "usuario")
 public class Usuario implements Serializable{
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "fk_id_tecnico", referencedColumnName = "id_tecnico")
+  @JoinColumn(name = "id_tecnico")
   private Tecnico tecnico;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "usuario_permiso",
-    joinColumns = @JoinColumn(name = "fk_id_usuario", referencedColumnName = "id_usuario"),
-    inverseJoinColumns = @JoinColumn(name = "fk_id_permiso", referencedColumnName = "id_permiso"),
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"fk_id_usuario", "fk_id_permiso"})}
+    joinColumns = @JoinColumn(name = "id_usuario"),
+    inverseJoinColumns = @JoinColumn(name = "id_permiso")
   )
   private Set<Permiso> listaPermiso;
 

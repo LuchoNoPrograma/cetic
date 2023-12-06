@@ -2,6 +2,7 @@ package uap.fit.cetic.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import uap.fit.cetic.model.enums.EstadoLaboratorio;
 
 import java.io.Serializable;
 
@@ -21,5 +22,9 @@ public class Laboratorio implements Serializable {
 
     @Column(name = "nombre", length = 55)
     private String nombre;
+
+    @Column(name = "estado")
+    @Enumerated(EnumType.STRING)
+    private EstadoLaboratorio estado;
 }
 

@@ -1,16 +1,12 @@
 package uap.fit.cetic.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import uap.fit.cetic.model.dao.IPersonaDao;
 import uap.fit.cetic.model.entity.Equipo;
-import uap.fit.cetic.model.entity.Usuario;
-import uap.fit.cetic.model.repository.GenericRepository;
 import uap.fit.cetic.model.service.IEquipoService;
-import uap.fit.cetic.model.service.IPersonaService;
+import uap.fit.cetic.model.service.IClienteService;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -19,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IndexController {
   private final DataSource dataSource;
-  private final IPersonaService personaService;
+  private final IClienteService personaService;
   private final IEquipoService equipoService;
 
 
@@ -40,7 +36,7 @@ public class IndexController {
   }*/
 
   @GetMapping("/index")
-  public String index(Model model){
+  public String index(Model model) {
     List<Equipo> listaEquipo = equipoService.listarTodos();
     model.addAttribute("listaEquipo", listaEquipo);
     return "index";

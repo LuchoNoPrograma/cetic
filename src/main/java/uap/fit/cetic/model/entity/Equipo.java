@@ -16,14 +16,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "equipo")
 public class Equipo implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_id_categoria", referencedColumnName = "id_categoria", nullable = false)
-    private Categoria categoria;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_id_laboratorio", referencedColumnName = "id_laboratorio")
-    private Laboratorio laboratorio;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_equipo", nullable = false)
@@ -45,9 +37,6 @@ public class Equipo implements Serializable {
     private String marca;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado_equipo", length = 25)
+    @Column(name = "estado_equipo", length = 30)
     private EstadoEquipo estadoEquipo;
-
-    @Column(name = "fecha_registro")
-    private LocalDateTime fechaRegistro;
 }
