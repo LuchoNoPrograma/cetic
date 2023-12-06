@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{/plantilla/plantilla-admin}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="contenido">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 col-12 align-self-center">
+                <h3 class="text-themecolor mb-0">Tecnico</h3>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/equipo/lista}">Lista de Tecnico</a>
+                    </li>
+                    <li class="breadcrumb-item active">Formulario de registro</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h4 class="mb-0 text-white">Formulario de registro de Tecnico</h4>
+                    </div>
+                    <!--ESTE METODO IRA AL @PostMapping de tu controlador-->
+                    <!--LA VARIABLE ${equipo} se recibe del controlador mediante model.addAttribute("equipo", new Equipo());
+                    o el otro model.addAttribute("equipo", equipo);
+                    -->
+                    <form method="POST" th:action="@{/Tecnico/registrar}" th:object="${Tecnico}">
+
+                        <!--En th:field="*{idLaboratorio}" se refiere al id del laboratorio, esto hace referencia a la columna de tu entidad-->
+                        <!--Haces lo mismo para todos-->
+                        <input th:field="*{idTecnico}" type="hidden"/>
+                        <div>
+                            <div class="card-body">
+                                <h4 class="card-title">Información del Tecnico</h4>
+                                <div class="row pt-3">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="control-label" for="categoria">Categoria:</label>
+                                            <!--El th:field="*{categoria}" se refiere a la columna categoria de tu entidad-->
+                                            <select class="form-control" id="categoria" th:field="*{categoria}">
+                                                <option hidden th:value="null">--SELECCIONE--</option>
+                                                <!--Repetir esto por cada categoria en la variable listaCategoria que viene del controlador
+                                                model.addAttribute("listaCategoria", listaCategoria);
+                                                -->
+                                                <option th:each="categoria : ${listaCategoria}"
+                                                        th:text="${categoria.nombreFormal}"
+                                                        th:value="${categoria.name}"></option>
+                                            </select>
+                                            <small class="form-control-feedback">
+                                                Seleccione la categoria de Tecnico
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="control-label" for="nombre">Nombre: </label>
+                                            <input class="form-control" id="nombre" placeholder="--ESCRIBA--"
+                                                   th:field="*{nombre}"/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="control-label" for="nombre">Apellido: </label>
+                                                <input class="form-control" id="nombre" placeholder="--ESCRIBA--"
+                                                       th:field="*{nombre}"/>
+                                            </div>
+                                    </div><div class="col-md-4">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="control-label" for="nombre">CI: </label>
+                                                <input class="form-control" id="nombre" placeholder="--ESCRIBA--"
+                                                       th:field="*{nombre}"/>
+                                            </div>
+                                    </div><div class="col-md-4">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="control-label" for="nombre">Celular: </label>
+                                                <input class="form-control" id="nombre" placeholder="--ESCRIBA--"
+                                                       th:field="*{nombre}"/>
+                                            </div>
+                                    </div><div class="col-md-4">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="control-label" for="nombre">Email: </label>
+                                                <input class="form-control" id="nombre" placeholder="--ESCRIBA--"
+                                                       th:field="*{nombre}"/>
+                                            </div>
+                                    </div><div class="col-md-4">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="control-label" for="nombre">RU: </label>
+                                                <input class="form-control" id="nombre" placeholder="--ESCRIBA--"
+                                                       th:field="*{nombre}"/>
+                                            </div>
+                                    </div><div class="col-md-4">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label class="control-label" for="nombre">Descripcion: </label>
+                                                <input class="form-control" id="nombre" placeholder="--ESCRIBA--"
+                                                       th:field="*{nombre}"/>
+                                            </div>
+                                    </div><div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="control-label" for="horario">Horario: </label>
+                                            <input class="form-control" id="horario" placeholder="--ESCRIBA--"
+                                                   th:field="*{horario}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/row-->
+                               
+    
+                            <hr/>
+                            <div class="form-actions">
+                                <div class="card-body border-top">
+                                    <button class="btn btn-success rounded-pill px-4" type="submit">
+                                        <div class="d-flex align-items-center">
+                                            <i class="feather-sm me-1 fill-icon" data-feather="save"></i>
+                                            Registrar
+                                        </div>
+                                    </button>
+                                    <button class="btn btn-danger rounded-pill px-4 ms-2 text-white"
+                                            onclick="window.history.back();"
+                                            type="button">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script>
+        $('.form-check-label').each(function () {
+            if ($(this).attr('data-checked') === 'true') {
+                const inputId = $(this).attr('for');
+                $('#' + inputId).prop('checked', true);
+            }
+        });
+    </script>
+</div>
+</body>
+</html>
