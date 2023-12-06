@@ -17,8 +17,9 @@
       <h3 class="text-themecolor mb-0">Equipos</h3>
       <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item active">
-          <a th:href="@{/equipo/lista}">Lista de equipos</a>
+          <a th:href="@{/solicitud/lista}">Lista de solicitudes</a>
         </li>
+        <li class="breadcrumb-item active">Agendar reserva</li>
       </ol>
     </div>
   </div>
@@ -26,64 +27,228 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <div class="card">
-          <div class="card-header bg-info">
-            <h4 class="mb-0 text-white">Lista de equipos registrados</h4>
-          </div>
-          <div class="card-body">
-            <div class="py-2 d-flex justify-content-end">
-              <!--AQUI TIENE QUE IR LA RUTA DE TU GETMAPPING-->
-              <a class="btn btn-primary" th:href="@{/equipo/form-registrar}">
-                Registrar <i class="feather-sm fill-white" data-feather="file-plus"></i>
-              </a>
+        <div class="card px-3 py-3">
+          <div class="card-title">Datos de la solicitud</div>
+          <div class="card-text">
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <label for="nombres">Nombres :</label>
+                <input class="form-control" id="nombres" readonly th:field="${solicitud.cliente.nombre}" type="text"/>
+              </div>
+              <div class="col-md-3">
+                <label for="apellidos">Apellidos :</label>
+                <input class="form-control" id="apellidos" readonly th:field="${solicitud.cliente.apellidos}" type="text"/>
+              </div>
+              <div class="col-md-3">
+                <label for="ci">CI :</label>
+                <input class="form-control" id="ci" readonly th:field="${solicitud.cliente.ci}" type="text"/>
+              </div>
+              <div class="col-md-3">
+                <label for="celular">Celular :</label>
+                <input class="form-control" id="celular" readonly th:field="${solicitud.cliente.ci}" type="text"/>
+              </div>
             </div>
-            <table class="table table-bordered table-striped" id="tabla-equipo">
-              <thead>
-              <tr>
-                <th>Codigo UAP</th>
-                <th>Codigo Serie</th>
-                <th>Categoria</th>
-                <th>Detalle</th>
-                <th>Estado</th>
-                <th>Operaciones</th>
-              </tr>
-              </thead>
-              <tbody>
-              <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaEquipo", listaEquipo);-->
-              <tr th:each="equipo : ${listaEquipo}" th:if="${equipo?.estadoEquipo?.name() != 'ELIMINADO'}">
-                <td th:text="${equipo.codUap}"></td>
-                <td th:text="${equipo.codSerie}"></td>
-                <td th:text="${equipo.categoria.nombreFormal}"></td>
-                <td th:text="${equipo.marca}"></td>
-                <td th:text="${equipo?.estadoEquipo?.nombreFormal}"></td>
-                <td>
-                  <!--ESTOS BOTONES COPIAS Y PEGAS Y LO CAMBIAS POR TUS RUTAS-->
-                  <a class="btn btn-info btn-circle"
-                     data-bs-placement="top"
-                     data-bs-toggle="tooltip"
-                     th:href="@{/equipo/form-modificar/{idEquipo}(idEquipo=${equipo.idEquipo})}"
-                     title="Modificar">
-                    <i class="feather-sm fill-white" data-feather="edit"></i>
-                  </a>
-                  <button class="btn btn-danger btn-circle"
-                          data-bs-placement="top" data-bs-toggle="tooltip"
-                          th:attr="onclick='eliminarEquipo(\'' + ${equipo.idEquipo} + '\')'"
-                          title="Eliminar">
-                    <i class="feather-sm fill-white" data-feather="trash-2"></i>
-                  </button>
-                  <a class="btn btn-outline-secondary btn-circle"
-                     data-bs-placement="top" data-bs-toggle="tooltip" title="Más">
-                    <i class="feather-sm fill-white" data-feather="more-vertical"></i>
-                  </a>
-                </td>
-              </tr>
-              </tbody>
-            </table>
+            
+            <div class="row">
+              <div class="col-md-3">
+                <label for="motivo">Motivo de la reserva(Eventos) :</label>
+                <th:block th:each="reserva : ${listaReserva}">
+                  <input class="form-control" id="motivo" readonly th:value="${reserva.motivo}" type="text"/>
+                </th:block>
+              </div>
+              
+              <div class="col-md-4">
+                <label for="fechaSolicitud">Fecha de la solicitud :</label>
+                <input class="form-control" id="fechaSolicitud" readonly th:value="${solicitud.fechaSolicitud}" type="datetime-local"/>
+              </div>
+              
+              <div class="col-md-5">
+                <label for="descripcion">Descripción de la solicitud:</label>
+                <textarea class="form-control" id="descripcion" readonly th:field="${solicitud.descripcion}"></textarea>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      
+      <div class="col-md-12">
+        <div class="card">
+          <div>
+            <div class="row gx-0">
+              <div class="col-lg-12">
+                <div class="p-4 calender-sidebar app-calendar">
+                  <div id="calendar"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- BEGIN MODAL -->
+        <div aria-hidden="true" aria-labelledby="eventModalLabel" class="modal fade" id="eventModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">
+                  Agregar / Editar evento
+                </h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="">
+                      <label class="form-label">Nombre del evento</label>
+                      <input class="form-control" id="event-title" type="text" th:value="${listaReserva[0].motivo}"/>
+                    </div>
+                  </div>
+                  <!--<div class="col-md-12 mt-4">
+                    <div><label class="form-label">Event Color</label></div>
+                    <div class="d-flex">
+                      <div class="n-chk">
+                        <div class="form-check form-check-primary form-check-inline">
+                          <input class="form-check-input" id="modalDanger" name="event-level" type="radio"
+                                 value="Danger"/>
+                          <label class="form-check-label" for="modalDanger">Danger</label>
+                        </div>
+                      </div>
+                      <div class="n-chk">
+                        <div class="form-check form-check-warning form-check-inline">
+                          <input class="form-check-input" id="modalSuccess" name="event-level" type="radio"
+                                 value="Success"/>
+                          <label class="form-check-label" for="modalSuccess">Success</label>
+                        </div>
+                      </div>
+                      <div class="n-chk">
+                        <div class="form-check form-check-success form-check-inline">
+                          <input class="form-check-input" id="modalPrimary" name="event-level" type="radio"
+                                 value="Primary"/>
+                          <label class="form-check-label" for="modalPrimary">Primary</label>
+                        </div>
+                      </div>
+                      <div class="n-chk">
+                        <div class="form-check form-check-danger form-check-inline">
+                          <input class="form-check-input" id="modalWarning" name="event-level" type="radio"
+                                 value="Warning"/>
+                          <label class="form-check-label" for="modalWarning">Warning</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>-->
+                  
+                  <div class="col-md-12 d-none">
+                    <div class="">
+                      <label class="form-label">Fecha y hora inicio</label>
+                      <input class="form-control" id="event-start-date" type="text"/>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-12 d-none">
+                    <div class="">
+                      <label class="form-label">Fecha y hora fin</label>
+                      <input class="form-control" id="event-end-date" type="text"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-bs-dismiss="modal" type="button">
+                  Cerrar
+                </button>
+                <button class="btn btn-success btn-update-event" data-fc-event-public-id="" type="button">
+                  Actualizar
+                </button>
+                <button class="btn btn-primary btn-add-event" type="button">
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div aria-hidden="true" aria-labelledby="eventModalLabel" class="modal fade" id="eventModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">
+                  Agregar / Editar evento
+                </h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="">
+                      <label class="form-label">Event Title</label>
+                      <input class="form-control" id="event-title" type="text"/>
+                    </div>
+                  </div>
+                  <div class="col-md-12 mt-4">
+                    <div><label class="form-label">Event Color</label></div>
+                    <div class="d-flex">
+                      <div class="n-chk">
+                        <div class="form-check form-check-primary form-check-inline">
+                          <input class="form-check-input" id="modalDanger" name="event-level" type="radio"
+                                 value="Danger"/>
+                          <label class="form-check-label" for="modalDanger">Danger</label>
+                        </div>
+                      </div>
+                      <div class="n-chk">
+                        <div class="form-check form-check-warning form-check-inline">
+                          <input class="form-check-input" id="modalSuccess" name="event-level" type="radio"
+                                 value="Success"/>
+                          <label class="form-check-label" for="modalSuccess">Success</label>
+                        </div>
+                      </div>
+                      <div class="n-chk">
+                        <div class="form-check form-check-success form-check-inline">
+                          <input class="form-check-input" id="modalPrimary" name="event-level" type="radio"
+                                 value="Primary"/>
+                          <label class="form-check-label" for="modalPrimary">Primary</label>
+                        </div>
+                      </div>
+                      <div class="n-chk">
+                        <div class="form-check form-check-danger form-check-inline">
+                          <input class="form-check-input" id="modalWarning" name="event-level" type="radio"
+                                 value="Warning"/>
+                          <label class="form-check-label" for="modalWarning">Warning</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-12 d-none">
+                    <div class="">
+                      <label class="form-label">Enter Start Date</label>
+                      <input class="form-control" id="event-start-date" type="text"/>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-12 d-none">
+                    <div class="">
+                      <label class="form-label">Enter End Date</label>
+                      <input class="form-control" id="event-end-date" type="text"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-bs-dismiss="modal" type="button">
+                  Close
+                </button>
+                <button class="btn btn-success btn-update-event" data-fc-event-public-id="" type="button">
+                  Update changes
+                </button>
+                <button class="btn btn-primary btn-add-event" type="button">
+                  Add Event
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- END MODAL -->
+      </div>
     </div>
   </div>
+  
   
   <!--    AQUI TERMINA TU LISTA, LO DEMAS COPIAS Y PEGAS-->
 </div>
@@ -92,7 +257,299 @@
   <script th:src="@{/dist/libs/sweetalert2/dist/sweetalert2.min.js}"></script>
   <script th:src="@{/dist/libs/moment/min/moment.min.js}"></script>
   <script th:src="@{/dist/libs/fullcalendar/index.global.min.js}"></script>
-
+  
+  
+  <script>
+    /*========Calender Js=========*/
+    /*==========================*/
+    
+    document.addEventListener("DOMContentLoaded", async function () {
+      /*=================*/
+      //  Calender Date variable
+      /*=================*/
+      var newDate = new Date();
+      
+      function getDynamicMonth() {
+        getMonthValue = newDate.getMonth();
+        _getUpdatedMonthValue = getMonthValue + 1;
+        if (_getUpdatedMonthValue < 10) {
+          return `0${_getUpdatedMonthValue}`;
+        } else {
+          return `${_getUpdatedMonthValue}`;
+        }
+      }
+      
+      /*=================*/
+      // Calender Modal Elements
+      /*=================*/
+      var getModalTitleEl = document.querySelector("#event-title");
+      var getModalStartDateEl = document.querySelector("#event-start-date");
+      var getModalEndDateEl = document.querySelector("#event-end-date");
+      var getModalAddBtnEl = document.querySelector(".btn-add-event");
+      var getModalUpdateBtnEl = document.querySelector(".btn-update-event");
+      var calendarsEvents = {
+        Danger: "danger",
+        Success: "success",
+        Primary: "primary",
+        Warning: "warning",
+      };
+      /*=====================*/
+      // Calendar Elements and options
+      /*=====================*/
+      var calendarEl = document.querySelector("#calendar");
+      var checkWidowWidth = function () {
+        if (window.innerWidth <= 1199) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+      var calendarHeaderToolbar = {
+        left: "prev next addEventButton",
+        center: "title",
+        right: "dayGridMonth,timeGridWeek,timeGridDay",
+      };
+      
+      
+      class EventoCalendario{
+        constructor(id, title, start, end, extendedProps){
+          this.id = id
+          this.title = title
+          this.start = start
+          this.end = end
+        }
+      }
+      const response = await fetch(`/reserva/lista-eventos-calendario`)
+      let calendarEventsList = await response.json();
+      
+      /*var calendarEventsList = [
+        {
+          id: 1,
+          title: "Event Conf.",
+          start: `${newDate.getFullYear()}-${getDynamicMonth()}-01`,
+          extendedProps: {calendar: "Danger"},
+        },
+        {
+          id: 2,
+          title: "Seminar #4",
+          start: `${newDate.getFullYear()}-${getDynamicMonth()}-07`,
+          end: `${newDate.getFullYear()}-${getDynamicMonth()}-10`,
+          extendedProps: {calendar: "Success"},
+        },
+        {
+          groupId: "999",
+          id: 3,
+          title: "Meeting #5",
+          start: `${newDate.getFullYear()}-${getDynamicMonth()}-09T16:00:00`,
+          extendedProps: {calendar: "Primary"},
+        },
+        {
+          groupId: "999",
+          id: 4,
+          title: "Submission #1",
+          start: `${newDate.getFullYear()}-${getDynamicMonth()}-16T16:00:00`,
+          extendedProps: {calendar: "Warning"},
+        },
+        {
+          id: 5,
+          title: "Seminar #6",
+          start: `${newDate.getFullYear()}-${getDynamicMonth()}-11`,
+          end: `${newDate.getFullYear()}-${getDynamicMonth()}-13`,
+          extendedProps: {calendar: "Danger"},
+        },
+        {
+          id: 6,
+          title: "Meeting 3",
+          start: `${newDate.getFullYear()}-${getDynamicMonth()}-12T10:30:00`,
+          end: `${newDate.getFullYear()}-${getDynamicMonth()}-12T12:30:00`,
+          extendedProps: {calendar: "Success"},
+        },
+        {
+          id: 7,
+          title: "Meetup #",
+          start: `${newDate.getFullYear()}-${getDynamicMonth()}-12T12:00:00`,
+          extendedProps: {calendar: "Primary"},
+        },
+        {
+          id: 8,
+          title: "Submission",
+          start: `${newDate.getFullYear()}-${getDynamicMonth()}-12T14:30:00`,
+          extendedProps: {calendar: "Warning"},
+        },
+        {
+          id: 9,
+          title: "Attend event",
+          start: `${newDate.getFullYear()}-${getDynamicMonth()}-13T07:00:00`,
+          extendedProps: {calendar: "Success"},
+        },
+        {
+          id: 10,
+          title: "Project submission #2",
+          start: `${newDate.getFullYear()}-${getDynamicMonth()}-28`,
+          extendedProps: {calendar: "Primary"},
+        },
+      ];*/
+      /*=====================*/
+      // Calendar Select fn.
+      /*=====================*/
+      var calendarSelect = function (info) {
+        getModalAddBtnEl.style.display = "block";
+        getModalUpdateBtnEl.style.display = "none";
+        myModal.show();
+        getModalStartDateEl.value = info.startStr;
+        getModalEndDateEl.value = info.endStr;
+      };
+      /*=====================*/
+      // Calendar AddEvent fn.
+      /*=====================*/
+      var calendarAddEvent = function () {
+        var currentDate = new Date();
+        var dd = String(currentDate.getDate()).padStart(2, "0");
+        var mm = String(currentDate.getMonth() + 1).padStart(2, "0"); //January is 0!
+        var yyyy = currentDate.getFullYear();
+        var combineDate = `${yyyy}-${mm}-${dd}T00:00:00`;
+        getModalAddBtnEl.style.display = "block";
+        getModalUpdateBtnEl.style.display = "none";
+        myModal.show();
+        getModalStartDateEl.value = combineDate;
+      };
+      
+      /*=====================*/
+      // Calender Event Function
+      /*=====================*/
+      var calendarEventClick = function (info) {
+        var eventObj = info.event;
+        
+        if (eventObj.url) {
+          window.open(eventObj.url);
+          
+          info.jsEvent.preventDefault();
+        } else {
+          var getModalEventId = eventObj._def.publicId;
+          var getModalEventLevel = eventObj._def.extendedProps["calendar"];
+          var getModalCheckedRadioBtnEl = document.querySelector(
+              `input[value="${getModalEventLevel}"]`
+          );
+          
+          getModalTitleEl.value = eventObj.title;
+          getModalCheckedRadioBtnEl.checked = true;
+          getModalUpdateBtnEl.setAttribute(
+              "data-fc-event-public-id",
+              getModalEventId
+          );
+          getModalAddBtnEl.style.display = "none";
+          getModalUpdateBtnEl.style.display = "block";
+          myModal.show();
+        }
+      };
+      
+      /*=====================*/
+      // Active Calender
+      /*=====================*/
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'es',
+        selectable: true,
+        height: checkWidowWidth() ? 900 : 1052,
+        initialView: checkWidowWidth() ? "listWeek" : "dayGridMonth",
+        initialDate: `${newDate.getFullYear()}-${getDynamicMonth()}-07`,
+        headerToolbar: calendarHeaderToolbar,
+        events: calendarEventsList,
+        select: calendarSelect,
+        unselect: function () {
+          console.log("unselected");
+        },
+        customButtons: {
+          addEventButton: {
+            text: "Add Event",
+            click: calendarAddEvent,
+          },
+        },
+        eventClassNames: function ({event: calendarEvent}) {
+          const getColorValue =
+              calendarsEvents[calendarEvent._def.extendedProps.calendar];
+          return [
+            "event-fc-color fc-bg-" + getColorValue,
+          ];
+        },
+        
+        eventClick: calendarEventClick,
+        windowResize: function (arg) {
+          if (checkWidowWidth()) {
+            calendar.changeView("listWeek");
+            calendar.setOption("height", 900);
+          } else {
+            calendar.changeView("dayGridMonth");
+            calendar.setOption("height", 1052);
+          }
+        },
+      });
+      
+      /*=====================*/
+      // Update Calender Event
+      /*=====================*/
+      getModalUpdateBtnEl.addEventListener("click", function () {
+        var getPublicID = this.dataset.fcEventPublicId;
+        var getTitleUpdatedValue = getModalTitleEl.value;
+        var getEvent = calendar.getEventById(getPublicID);
+        var getModalUpdatedCheckedRadioBtnEl = document.querySelector(
+            'input[name="event-level"]:checked'
+        );
+        
+        var getModalUpdatedCheckedRadioBtnValue =
+            getModalUpdatedCheckedRadioBtnEl !== null
+                ? getModalUpdatedCheckedRadioBtnEl.value
+                : "";
+        
+        getEvent.setProp("title", getTitleUpdatedValue);
+        getEvent.setExtendedProp("calendar", getModalUpdatedCheckedRadioBtnValue);
+        myModal.hide();
+      });
+      /*=====================*/
+      // Add Calender Event
+      /*=====================*/
+      getModalAddBtnEl.addEventListener("click", function () {
+        var getModalCheckedRadioBtnEl = document.querySelector(
+            'input[name="event-level"]:checked'
+        );
+        
+        var getTitleValue = getModalTitleEl.value;
+        var setModalStartDateValue = getModalStartDateEl.value;
+        var setModalEndDateValue = getModalEndDateEl.value;
+        var getModalCheckedRadioBtnValue =
+            getModalCheckedRadioBtnEl !== null ? getModalCheckedRadioBtnEl.value : "";
+        
+        calendar.addEvent({
+          id: 12,
+          title: getTitleValue,
+          start: setModalStartDateValue,
+          end: setModalEndDateValue,
+          allDay: true,
+          extendedProps: {calendar: getModalCheckedRadioBtnValue},
+        });
+        myModal.hide();
+      });
+      /*=====================*/
+      // Calendar Init
+      /*=====================*/
+      calendar.render();
+      var myModal = new bootstrap.Modal(document.getElementById("eventModal"));
+      var modalToggle = document.querySelector(".fc-addEventButton-button ");
+      document
+          .getElementById("eventModal")
+          .addEventListener("hidden.bs.modal", function (event) {
+            getModalTitleEl.value = "";
+            getModalStartDateEl.value = "";
+            getModalEndDateEl.value = "";
+            var getModalIfCheckedRadioBtnEl = document.querySelector(
+                'input[name="event-level"]:checked'
+            );
+            if (getModalIfCheckedRadioBtnEl !== null) {
+              getModalIfCheckedRadioBtnEl.checked = false;
+            }
+          });
+    });
+  
+  </script>
 </div>
 </body>
 </html>
