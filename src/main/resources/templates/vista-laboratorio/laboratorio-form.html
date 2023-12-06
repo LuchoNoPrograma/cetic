@@ -27,8 +27,8 @@
                         <h4 class="mb-0 text-white">Formulario de registro de Laboratorio</h4>
                     </div>
                     <!--ESTE METODO IRA AL @PostMapping de tu controlador-->
-                    <!--LA VARIABLE ${equipo} se recibe del controlador mediante model.addAttribute("equipo", new Equipo());
-                    o el otro model.addAttribute("equipo", equipo);
+                    <!--LA VARIABLE ${laboratorio} se recibe del controlador mediante model.addAttribute("laboratorio", new Laboratorio());
+                    o el otro model.addAttribute("laboratorio", laboratorio);
                     -->
                     <form method="POST" th:action="@{/laboratorio/registrar}" th:object="${laboratorio}">
 

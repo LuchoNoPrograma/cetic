@@ -38,6 +38,9 @@ public class Tecnico implements Serializable {
 
     @Column(name = "ru", nullable = false, unique = true, length = 15)
     private String ru;
+    
+    @Column(name = "horario", length = 100)
+    private String horario;
 
     @Column(name = "descripcion", length = 55)
     private String descripcion;

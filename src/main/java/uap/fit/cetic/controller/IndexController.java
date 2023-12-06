@@ -1,5 +1,6 @@
 package uap.fit.cetic.controller;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +41,11 @@ public class IndexController {
     List<Equipo> listaEquipo = equipoService.listarTodos();
     model.addAttribute("listaEquipo", listaEquipo);
     return "index";
+  }
+
+  @GetMapping("/login")
+  public String login(){
+    return "login";
   }
 
 }
