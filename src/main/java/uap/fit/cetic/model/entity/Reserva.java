@@ -13,6 +13,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "reserva")
 public class Reserva {
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "id_solicitud", nullable = false)
+  private Solicitud solicitud;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id_reserva", nullable = false)

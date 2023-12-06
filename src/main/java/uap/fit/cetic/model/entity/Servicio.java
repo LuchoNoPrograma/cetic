@@ -27,7 +27,7 @@ public class Servicio implements Serializable {
     private Equipo equipo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nro_solicitud")
+    @JoinColumn(name = "nro_solicitud", nullable = false)
     private Solicitud solicitud;
 
     @Id

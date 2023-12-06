@@ -10,6 +10,8 @@
 </head>
 <body>
 <div layout:fragment="contenido">
+
+    <!--AQUI COMIENZAS TU LISTA, LO DEMAS COPIAS Y PEGAS-->
     <div class="row page-titles">
         <div class="col-md-5 col-12 align-self-center">
             <h3 class="text-themecolor mb-0">Equipos</h3>
@@ -30,6 +32,7 @@
                     </div>
                     <div class="card-body">
                         <div class="py-2 d-flex justify-content-end">
+                            <!--AQUI TIENE QUE IR LA RUTA DE TU GETMAPPING-->
                             <a class="btn btn-primary" th:href="@{/equipo/form-registrar}">
                                 Registrar  <i class="feather-sm fill-white" data-feather="file-plus"></i>
                             </a>
@@ -40,21 +43,21 @@
                                 <th>Codigo UAP</th>
                                 <th>Codigo Serie</th>
                                 <th>Categoria</th>
-                                <th>Fecha registro</th>
                                 <th>Detalle</th>
                                 <th>Estado</th>
                                 <th>Operaciones</th>
                             </tr>
                             </thead>
                             <tbody>
+                            <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaEquipo", listaEquipo);-->
                             <tr th:each="equipo : ${listaEquipo}" th:if="${equipo?.estadoEquipo?.name() != 'ELIMINADO'}">
                                 <td th:text="${equipo.codUap}"></td>
                                 <td th:text="${equipo.codSerie}"></td>
-                                <td th:text="${equipo.categoria.nombre}"></td>
-                                <td th:text="${#temporals.format(equipo.fechaRegistro, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${equipo.categoria.nombreFormal}"></td>
                                 <td th:text="${equipo.marca}"></td>
                                 <td th:text="${equipo?.estadoEquipo?.nombreFormal}"></td>
                                 <td>
+                                    <!--ESTOS BOTONES COPIAS Y PEGAS Y LO CAMBIAS POR TUS RUTAS-->
                                     <a class="btn btn-info btn-circle"
                                        data-bs-placement="top"
                                        data-bs-toggle="tooltip"
@@ -81,6 +84,8 @@
             </div>
         </div>
     </div>
+
+    <!--    AQUI TERMINA TU LISTA, LO DEMAS COPIAS Y PEGAS-->
 </div>
 <div layout:fragment="script">
     <script th:src="@{/dist/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
@@ -88,6 +93,7 @@
     <script>
         $("#tabla-equipo").DataTable();
 
+        //ESTE METODO ES PARA ELIMINAR Y SE ENVIA A TU METODO DE ELIMINAR DEL CONTROLADOR
         function eliminarEquipo(idEquipo) {
             Swal.fire(
                 {

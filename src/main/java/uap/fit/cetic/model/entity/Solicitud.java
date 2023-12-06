@@ -18,10 +18,6 @@ import java.util.List;
 @Table(name = "solicitud")
 public class Solicitud implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_reserva")
-    private Reserva reserva;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_persona")
     private Cliente cliente;
 
