@@ -1,14 +1,16 @@
 package uap.fit.cetic.model.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import uap.fit.cetic.model.enums.EstadoServicio;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import uap.fit.cetic.model.enums.EstadoSolicitud;
+import uap.fit.cetic.model.enums.TipoSolicitud;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,23 +19,37 @@ import java.util.List;
 @Entity
 @Table(name = "solicitud")
 public class Solicitud implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_persona")
-    private Cliente cliente;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "id_persona")
+  private Cliente cliente;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "nro_solicitud")
-    private Long nroSolicitud;
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "solicitud_motivo",
+    joinColumns = @JoinColumn(name = "nro_solicitud"),
+    inverseJoinColumns = @JoinColumn(name = "id_motivo")
+  )
+  private Set<Motivo> listaSolicitudMotivo;
 
-    @Column(name = "fecha_solicitud", nullable = false)
-    private LocalDateTime fechaSolicitud;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "nro_solicitud")
+  private Long nroSolicitud;
 
-    @Column(name = "observacion", length = 256)
-    private String observacion;
+  @Column(name = "fecha_solicitud", nullable = false)
+  private LocalDateTime fechaSolicitud;
 
-    @Column(name = "estado_solicitud", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private EstadoSolicitud estadoSolicitud;
+  @Column(name = "observacion", length = 155)
+  private String observacion;
+
+  @Column(name = "descripcion", length = 155)
+  private String descripcion;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "tipo_solicitud", length = 55)
+  private TipoSolicitud tipoSolicitud;
+
+  @Column(name = "estado_solicitud", nullable = false)
+  @Enumerated(EnumType.STRING)
+  private EstadoSolicitud estadoSolicitud;
 }
 

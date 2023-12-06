@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uap.fit.cetic.model.dao.ISolicitudDao;
 import uap.fit.cetic.model.entity.Solicitud;
+import uap.fit.cetic.model.enums.EstadoSolicitud;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,9 +28,8 @@ public class SolicitudServiceImpl implements ISolicitudService {
 
   @Override
   public Solicitud guardar(Solicitud entidad) {
-    if(entidad.getFechaSolicitud() == null){
-      entidad.setFechaSolicitud(LocalDateTime.now());
-    }
+    if(entidad.getFechaSolicitud() == null) entidad.setFechaSolicitud(LocalDateTime.now());
+    if(entidad.getEstadoSolicitud() == null) entidad.setEstadoSolicitud(EstadoSolicitud.PENDIENTE);
     return solicitudDao.save(entidad);
   }
 

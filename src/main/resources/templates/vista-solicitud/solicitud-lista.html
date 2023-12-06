@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{/plantilla/plantilla-admin}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Title</title>
+  <th:block layout:fragment="head">
+    <link rel="stylesheet" th:href="@{/dist/libs/sweetalert2/dist/sweetalert2.min.css}">
+  </th:block>
+</head>
+<body>
+<div layout:fragment="contenido">
+  
+  <!--AQUI COMIENZAS TU LISTA, LO DEMAS COPIAS Y PEGAS-->
+  <div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+      <h3 class="text-themecolor mb-0">Equipos</h3>
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item active">
+          <a th:href="@{/solicitud/lista}">Lista de solicitudes</a>
+        </li>
+      </ol>
+    </div>
+  </div>
+  
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header bg-info">
+            <h4 class="mb-0 text-white">Lista de solicitudes</h4>
+          </div>
+          <div class="card-body">
+            <div class="py-2 d-flex justify-content-end">
+              <!--AQUI TIENE QUE IR LA RUTA DE TU GETMAPPING-->
+              <a class="btn btn-primary" th:href="@{/solicitud/form-registrar}">
+                Registrar  <i class="feather-sm fill-white" data-feather="file-plus"></i>
+              </a>
+            </div>
+            <table class="table table-bordered table-striped" id="tabla-equipo">
+              <thead>
+              <tr>
+                <th>N° Solicitud</th>
+                <th>Tipo de solicitud</th>
+                <th>Fecha de solicitud</th>
+                <th>Estado</th>
+                <th>Operaciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaEquipo", listaEquipo);-->
+              <tr th:each="solicitud : ${listaSolicitud}">
+                <td th:text="${solicitud.nroSolicitud}"></td>
+                <td th:text="${solicitud.tipoSolicitud.nombreFormal}"></td>
+                <td th:text="${#temporals.format(solicitud.fechaSolicitud, 'dd/MM/yyyy hh:mm')}"></td>
+                <td th:text="${solicitud.estadoSolicitud}"></td>
+                <td>
+                  <!--ESTOS BOTONES COPIAS Y PEGAS Y LO CAMBIAS POR TUS RUTAS-->
+                  <!--<a class="btn btn-info btn-circle"
+                     data-bs-placement="top"
+                     data-bs-toggle="tooltip"
+                     th:href="@{/equipo/form-modificar/{idEquipo}(idEquipo=${equipo.idEquipo})}"
+                     title="Modificar">
+                    <i class="feather-sm fill-white" data-feather="edit"></i>
+                  </a>-->
+                  <button class="btn btn-danger btn-circle"
+                          data-bs-placement="top" data-bs-toggle="tooltip"
+                          th:attr="onclick='eliminarEquipo(\'' + ${solicitud.nroSolicitud} + '\')'"
+                          title="Rechaxar">
+                    <i class="feather-sm fill-white" data-feather="trash-2"></i>
+                  </button>
+                  <a class="btn btn-outline-secondary btn-circle"
+                     data-bs-placement="top" data-bs-toggle="tooltip" title="Más">
+                    <i class="feather-sm fill-white" data-feather="more-vertical"></i>
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--    AQUI TERMINA TU LISTA, LO DEMAS COPIAS Y PEGAS-->
+</div>
+<div layout:fragment="script">
+  <script th:src="@{/dist/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
+  <script th:src="@{/dist/libs/sweetalert2/dist/sweetalert2.min.js}"></script>
+  <script>
+    $("#tabla-equipo").DataTable();
+    
+    //ESTE METODO ES PARA ELIMINAR Y SE ENVIA A TU METODO DE ELIMINAR DEL CONTROLADOR
+    function eliminarEquipo(idEquipo) {
+      Swal.fire(
+          {
+            title: "Estás seguro?",
+            text: "El equipo será eliminado permanentemente!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, eliminar!",
+            cancelButtonText: "No, cancelar",
+            preConfirm: async () => {
+              try {
+                const response = await fetch(`/equipo/${idEquipo}`, {method: "DELETE"})
+                if (!response.ok) throw new Error(response.text());
+                Swal.fire({
+                  title: "Eliminado!",
+                  text: "El equipo ha sido eliminado.",
+                  icon: "success",
+                  confirmButtonText: "Entendido",
+                  preConfirm: () => location.reload(),
+                  allowOutsideClick: false,
+                  allowOutsideKey: false
+                });
+              } catch (error) {
+                Swal.showValidationMessage(`Ocurrió un error en la petición: ${error}`);
+                console.log(error);
+              }
+            },
+            allowOutsideClick: () => !Swal.isLoading(),
+          },
+      );
+    }
+  </script>
+</div>
+</body>
+</html>

@@ -15,13 +15,6 @@ import java.util.Set;
 @Entity
 @Table(name = "servicio")
 public class Servicio implements Serializable {
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "motivo",
-      joinColumns = @JoinColumn(name = "id_servicio"),
-      inverseJoinColumns = @JoinColumn(name = "id_tipo_servicio")
-    )
-    private Set<TipoServicio> listaMotivo;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_equipo")
     private Equipo equipo;

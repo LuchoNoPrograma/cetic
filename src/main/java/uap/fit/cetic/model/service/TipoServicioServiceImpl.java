@@ -19,7 +19,7 @@ public class TipoServicioServiceImpl implements ITipoServicioService {
 
   @Override
   public List<TipoServicio> listarTodos() {
-    return tipoServicioDao.findAll(Sort.by("idTipoServicio").descending());
+    return tipoServicioDao.findAll(Sort.by("idTipoServicio").ascending());
   }
 
   @Override

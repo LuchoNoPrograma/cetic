@@ -6,26 +6,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tipo_servicio")
-public class TipoServicio implements Serializable {
-  @OneToMany(mappedBy = "tipoServicio", fetch = FetchType.LAZY)
-  private List<Motivo> listaMotivo;
+@Table(name = "motivo")
+public class Motivo implements Serializable {
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "id_tipo_servicio")
+  private TipoServicio tipoServicio;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id_tipo_servicio", nullable = false)
-  private Long idTipoServicio;
+  @Column(name = "id_motivo")
+  private Long idMotivo;
 
-  @Column(name = "nombre", nullable = false, length = 55)
+  @Column(name = "nombre", length = 55, nullable = false)
   private String nombre;
 
   @Column(name = "descripcion", length = 155)

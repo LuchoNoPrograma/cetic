@@ -2,348 +2,164 @@
 <html lang="es" layout:decorate="~{/plantilla/plantilla-publica}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8">
-    <title>CETIC</title>
+  <meta charset="UTF-8">
+  <title>CETIC</title>
+  <th:block layout:fragment="head">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </th:block>
 </head>
 <body>
-<div layout:fragment="contenido">
-    <div class="container-fluid">
-        <div class="row page-titles">
-            <div class="col-12">
-                <div class="card">
-                    <div class="border-bottom title-part-padding">
-                        <h3 class="card-title mb-0">Formulario de solicitud de reparación</h3>
+<div layout:fragment="contenido" id="app">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-12">
+        <div class="card">
+          <div class="border-bottom title-part-padding">
+            <h3 class="card-title mb-0">Formulario de solicitud de reparación</h3>
+          </div>
+          <div class="card-body wizard-content">
+            <h6 class="card-subtitle mb-3"></h6>
+            <form class="tab-wizard wizard-circle" id="form-solicitud" method="POST"
+                  th:action="@{/solicitud/registrar}">
+              <!-- Step 1 -->
+              <h5>1. Tipo de solicitud</h5>
+              <section>
+                <div class="row">
+                  <input id="tipoSolicitud" type="hidden" v-model="tipoSolicitud">
+                  <div class="col-md-4">
+                    <div class="card bg-light-primary text-center p-2 rounded" style="cursor: pointer" @click="tipoSolicitud = 'SERVICIO_TECNICO'">
+                      <div class="card-text">
+                                                <span class="mdi mdi-wrench" style="font-size: 3em">
+                                                </span>
+                      </div>
+                      <div class="card-title">
+                        SERVICIO TECNICO
+                      </div>
                     </div>
-                    <div class="card-body wizard-content">
-                        <h6 class="card-subtitle mb-3"></h6>
-                        <form action="#" class="tab-wizard wizard-circle" id="form-solicitud">
-                            <!-- Step 1 -->
-                            <h5>1. Solicitud</h5>
-                            <section>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="card">
-                                            <div class="card-text">
-                                                ICONO
-                                            </div>
-                                            <div class="card-title">
-                                              SERVICIO TECNICO
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <h5>1. Información personal</h5>
-                            <section>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="nombres">Nombres :</label>
-                                            <input class="form-control" id="nombres" type="text"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="paterno">Apellido paterno :</label>
-                                            <input class="form-control" id="paterno" type="text"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="materno">Apellido materno :</label>
-                                            <input class="form-control" id="materno" type="text"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="ci">CI :</label>
-                                            <input class="form-control" id="ci" type="tel"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="celular">N° Celular :</label>
-                                            <input class="form-control" id="celular" type="tel"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                            <!-- Step 2 -->
-                            <!--<h5>Información de los equipos</h5>
-                            <section>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="categoria">Categoria del equipo :</label>
-                                        <input id="categoria" type="hidden">
-                                        <div class="d-flex flex-wrap align-content-center gap-2">
-                                            <div class="bg-light-primary text-center p-2 rounded"
-                                                 style="max-width: 7em; cursor: pointer"
-                                                 th:each="categoria : ${listaCategoria}">
-                                                <h6 style="height: 2em" th:text="${categoria.nombre}"></h6>
-                                                <span><i class="mdi" style="font-size: 3em"
-                                                         th:classappend="${categoria.icono}"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <label for="videoUrl1">Indique el motivo de su solicitud : (Marque las
-                                        casillas)</label>
-                                    <div class="col-md-12" th:each="servicio: ${listaServicio}">
-                                        <div class="card border border-info border-2">
-                                            <div class="card-title bg-info text-white">
-                                                <span th:text="${servicio.nombre}" class="mx-2"></span>
-                                            </div>
-                                            <div class="card-text px-2">
-                                                <th:block th:each="motivo : ${servicio.listaMotivo}">
-                                                    <label class="mx-2 bg-light-info px-2 py-1 rounded-pill" style="cursor: pointer;">
-                                                        <span th:text="${motivo.nombre}"></span>
-                                                        <input type="checkbox">
-                                                    </label>
-                                                </th:block>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label for="shortDescription1"
-                                            >Job Description :</label
-                                            >
-                                            <textarea class="form-control" id="shortDescription1"
-                                                      name="shortDescription"
-                                                      rows="6"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>-->
-                            <!-- Step 3 -->
-                            <h5>Interview</h5>
-                            <section>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="int1">Interview For :</label>
-                                            <input class="form-control" id="int1" type="text"/>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="intType1">Interview Type :</label>
-                                            <select
-                                                    class="form-select"
-                                                    data-placeholder="Type to search cities"
-                                                    id="intType1"
-                                                    name="intType1"
-                                            >
-                                                <option value="Banquet">Normal</option>
-                                                <option value="Fund Raiser">Difficult</option>
-                                                <option value="Dinner Party">Hard</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="Location1">Location :</label>
-                                            <select
-                                                    class="form-select"
-                                                    id="Location1"
-                                                    name="location"
-                                            >
-                                                <option value="">Select City</option>
-                                                <option value="India">India</option>
-                                                <option value="USA">USA</option>
-                                                <option value="Dubai">Dubai</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="jobTitle2">Interview Date :</label>
-                                            <input
-                                                    class="form-control"
-                                                    id="jobTitle2"
-                                                    type="date"
-                                            />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label>Requirements :</label>
-                                            <div class="c-inputs-stacked">
-                                                <div class="form-check">
-                                                    <input
-                                                            class="form-check-input"
-                                                            id="customRadio6"
-                                                            name="customRadio"
-                                                            type="radio"
-                                                    />
-                                                    <label
-                                                            class="form-check-label"
-                                                            for="customRadio6"
-                                                    >Employee</label
-                                                    >
-                                                </div>
-                                                <div class="form-check">
-                                                    <input
-                                                            class="form-check-input"
-                                                            id="customRadio7"
-                                                            name="customRadio"
-                                                            type="radio"
-                                                    />
-                                                    <label
-                                                            class="form-check-label"
-                                                            for="customRadio7"
-                                                    >Contract</label
-                                                    >
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                            <!-- Step 4 -->
-                            <h5>Remark</h5>
-                            <section>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="behName1">Behaviour :</label>
-                                            <input
-                                                    class="form-control"
-                                                    id="behName1"
-                                                    type="text"
-                                            />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="participants1">Confidance</label>
-                                            <input
-                                                    class="form-control"
-                                                    id="participants1"
-                                                    type="text"
-                                            />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="participants1">Result</label>
-                                            <select
-                                                    class="form-select"
-                                                    id="participants1"
-                                                    name="location"
-                                            >
-                                                <option value="">Select Result</option>
-                                                <option value="Selected">Selected</option>
-                                                <option value="Rejected">Rejected</option>
-                                                <option value="Call Second-time">
-                                                    Call Second-time
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="decisions1">Comments</label>
-                                            <textarea
-                                                    class="form-control"
-                                                    id="decisions1"
-                                                    name="decisions"
-                                                    rows="4"
-                                            ></textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label>Rate Interviwer :</label>
-                                            <div class="c-inputs-stacked">
-                                                <div class="form-check">
-                                                    <input
-                                                            class="form-check-input"
-                                                            id="customRadio1"
-                                                            name="customRadio"
-                                                            type="radio"
-                                                    />
-                                                    <label
-                                                            class="form-check-label"
-                                                            for="customRadio1"
-                                                    >1 star</label
-                                                    >
-                                                </div>
-                                                <div class="form-check">
-                                                    <input
-                                                            class="form-check-input"
-                                                            id="customRadio2"
-                                                            name="customRadio"
-                                                            type="radio"
-                                                    />
-                                                    <label
-                                                            class="form-check-label"
-                                                            for="customRadio2"
-                                                    >2 star</label
-                                                    >
-                                                </div>
-                                                <div class="form-check">
-                                                    <input
-                                                            class="form-check-input"
-                                                            id="customRadio3"
-                                                            name="customRadio"
-                                                            type="radio"
-                                                    />
-                                                    <label
-                                                            class="form-check-label"
-                                                            for="customRadio3"
-                                                    >3 star</label
-                                                    >
-                                                </div>
-                                                <div class="form-check">
-                                                    <input
-                                                            class="form-check-input"
-                                                            id="customRadio4"
-                                                            name="customRadio"
-                                                            type="radio"
-                                                    />
-                                                    <label
-                                                            class="form-check-label"
-                                                            for="customRadio4"
-                                                    >4 star</label
-                                                    >
-                                                </div>
-                                                <div class="form-check">
-                                                    <input
-                                                            class="form-check-input"
-                                                            id="customRadio5"
-                                                            name="customRadio"
-                                                            type="radio"
-                                                    />
-                                                    <label
-                                                            class="form-check-label"
-                                                            for="customRadio5"
-                                                    >5 star</label
-                                                    >
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </form>
+                  </div>
+                  
+                  <div class="col-md-4">
+                    <div class="card bg-light-primary text-center p-2 rounded" style="cursor: pointer" @click="tipoSolicitud = 'RESERVA_DE_LABORATORIO'">
+                      <div class="card-text">
+                                                <span class="mdi mdi-clock" style="font-size: 3em">
+                                                </span>
+                      </div>
+                      <div class="card-title">
+                        RESERVA DE LABORATORIO
+                      </div>
                     </div>
+                  </div>
+                
                 </div>
-            </div>
+              </section>
+              
+              <h5>1. Información personal</h5>
+              <section>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="nombres">Nombres :</label>
+                      <input class="form-control" id="nombres" type="text"/>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="paterno">Apellido paterno :</label>
+                      <input class="form-control" id="paterno" type="text"/>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="materno">Apellido materno :</label>
+                      <input class="form-control" id="materno" type="text"/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="ci">CI :</label>
+                      <input class="form-control" id="ci" type="tel"/>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="celular">N° Celular :</label>
+                      <input class="form-control" id="celular" type="tel"/>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              
+              <h5>2. Datos de la reserva</h5>
+              <section>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="motivo">Motivo de la reserva:</label>
+                    <textarea class="form-control" id="motivo"
+                              rows="3"></textarea>
+                  </div>
+                </div>
+              </section>
+              
+              <h5>2. Datos de la solicitud</h5>
+              <section>
+                <div class="row">
+                  <div class="col-md-12">
+                    <label>Indique el motivo de su solicitud : (Marque las casillas)</label>
+                    <div class="col-md-12" th:each="tipoServicio: ${listaTipoServicio}">
+                      <div class="card border border-info border-2">
+                        <div class="card-title bg-info text-white">
+                          <span class="mx-2" th:text="${tipoServicio.nombre}"></span>
+                        </div>
+                        <div class="card-text px-2">
+                          <th:block th:each="motivo : ${tipoServicio.listaMotivo}">
+                            <label class="mx-2 bg-light-info px-2 py-1 rounded-pill" style="cursor: pointer;">
+                              <span th:text="${motivo.nombre}"></span>
+                              <input type="checkbox">
+                            </label>
+                          </th:block>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="card-title bg-info text-white">
+                        <label class="mx-2" for="descripcion">Descripción</label>
+                        <textarea class="form-control" id="descripcion"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              
+              <button class="btn btn-success rounded-pill px-4" type="submit">
+                <div class="d-flex align-items-center">
+                  <i class="feather-sm me-1 fill-icon" data-feather="save"></i>
+                  Enviar solicitud
+                </div>
+              </button>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div layout:fragment="script">
-    <script th:src="@{/dist/libs/jquery-steps/build/jquery.steps.min.js}"></script>
-    <script>
-        /*        $("#form-solicitud").steps({
-                    headerTag: "h5",
-                    bodyTag: "section",
-                    transitionEffect: "fade",
-                    titleTemplate: '<span class="step">#index#</span> #title#',
-                    labels: {
-                        finish: "Submit",
-                    },
-                    onFinished: function (event, currentIndex) {
-                        swal(
-                            "Form Submitted!",
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lorem erat eleifend ex semper, lobortis purus sed."
-                        );
-                    },
-                })*/
-    </script>
+  <script>
+    const { createApp, ref } = Vue
+    
+    createApp({
+      setup() {
+        const listaTipoSolicitud = ['SERVICIO_TECNICO', 'RESERVA_DE_LABORATORIO']
+        const tipoSolicitud = ref('SERVICIO_TECNICO')
+        return {
+          tipoSolicitud
+        }
+      }
+    }).mount('#app')
+  </script>
 </div>
 </body>
 </html>
