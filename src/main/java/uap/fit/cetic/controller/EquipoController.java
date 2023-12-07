@@ -59,5 +59,10 @@ public class EquipoController {
     return ResponseEntity.ok("Equipo eliminado correctamente, id: " + idEquipo);
   }
 
+  @ResponseBody
+  @GetMapping("/categorias")
+  public ResponseEntity<?> categorias(Model model) {
+    return ResponseEntity.ok(Categoria.values());
+  }
 }
 

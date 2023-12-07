@@ -1,4 +1,4 @@
-package uap.fit.cetic.controller.dto;
+package uap.fit.cetic.dto;
 
 import lombok.*;
 

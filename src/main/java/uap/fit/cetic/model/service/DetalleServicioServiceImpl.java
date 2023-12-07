@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uap.fit.cetic.model.dao.IDetalleServicioDao;
-import uap.fit.cetic.model.entity.DetalleReserva;
 import uap.fit.cetic.model.entity.DetalleServicio;
 
 import java.util.List;
@@ -32,5 +31,10 @@ public class DetalleServicioServiceImpl implements IDetalleServicioService {
   @Override
   public void eliminarPorId(Long id) {
     detalleServicioDao.deleteById(id);
+  }
+
+  @Override
+  public List<DetalleServicio> guardarTodos(List<DetalleServicio> listaServicio) {
+    return detalleServicioDao.saveAll(listaServicio);
   }
 }

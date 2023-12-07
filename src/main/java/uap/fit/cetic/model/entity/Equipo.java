@@ -24,7 +24,7 @@ public class Equipo implements Serializable {
   @Column(name = "cod_uap", length = 55)
   private String codUap;
 
-  @Column(name = "cod_serie", nullable = false, unique = true, length = 55)
+  @Column(name = "cod_serie", unique = true, length = 55)
   private String codSerie;
 
   @Column(name = "color", length = 55)

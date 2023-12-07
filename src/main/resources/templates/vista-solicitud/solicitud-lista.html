@@ -41,6 +41,7 @@
               <thead>
               <tr>
                 <th>N° Solicitud</th>
+                <th>Cliente</th>
                 <th>Tipo de solicitud</th>
                 <th>Fecha de solicitud</th>
                 <th>Estado</th>
@@ -51,10 +52,17 @@
               <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaEquipo", listaEquipo);-->
               <tr th:each="solicitud : ${listaSolicitud}">
                 <td th:text="${solicitud.nroSolicitud}"></td>
+                <td th:text="${solicitud.cliente.nombre+' '+solicitud.cliente.apellidos}"></td>
                 <td th:text="${solicitud.tipoSolicitud.nombreFormal}"></td>
                 <td th:text="${#temporals.format(solicitud.fechaSolicitud, 'dd/MM/yyyy HH:mm')}"></td>
                 <td th:text="${solicitud.estadoSolicitud}"></td>
                 <td>
+                  <th:block th:if="${solicitud.tipoSolicitud.name() == 'SERVICIO_TECNICO'}">
+                    <a class="btn btn-info btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"
+                       th:href="@{/servicio/solicitud/{nroSolicitud}/atender(nroSolicitud=${solicitud.nroSolicitud})}" title="Atender servicio">
+                      <i class="feather-sm fill-white" data-feather="edit"></i>
+                    </a>
+                  </th:block>
                   <th:block th:if="${solicitud.tipoSolicitud.name() == 'RESERVA_DE_LABORATORIO'}">
                     <a class="btn btn-info btn-circle"
                        data-bs-placement="top"

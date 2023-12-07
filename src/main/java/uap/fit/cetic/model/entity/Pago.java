@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "pago")
 public class Pago implements Serializable {
   @ManyToOne
-  @JoinColumn(name = "id_solicitud", nullable = false)
+  @JoinColumn(name = "nro_solicitud", nullable = false)
   private Solicitud solicitud;
 
   @Id

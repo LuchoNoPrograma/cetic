@@ -33,4 +33,9 @@ public class ServicioServiceImpl implements IServicioService {
   public void eliminarPorId(Long id) {
     servicioDao.deleteById(id);
   }
+
+  @Override
+  public List<Servicio> guardarTodos(List<Servicio> listaServicio) {
+    return servicioDao.saveAll(listaServicio);
+  }
 }

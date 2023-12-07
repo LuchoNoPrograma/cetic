@@ -19,8 +19,8 @@ public class Reserva {
   @OneToMany(mappedBy = "reserva")
   private List<DetalleReserva> listaDetalleReserva;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "id_solicitud", nullable = false)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "nro_solicitud", nullable = false)
   private Solicitud solicitud;
 
   @Id
@@ -30,6 +30,9 @@ public class Reserva {
 
   @Column(name = "fecha_reserva", nullable = false)
   private String motivo;
+
+  @Column(name = "nombre_actividad", length = 55)
+  private String nombreActividad;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "estado_reserva", nullable = false)

@@ -5,7 +5,11 @@
   <meta charset="UTF-8">
   <title>CETIC</title>
   <th:block layout:fragment="head">
+    <link rel="stylesheet" th:href="@{/dist/libs/sweetalert2/dist/sweetalert2.min.css}">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha512-b94Z6431JyXY14iSXwgzeZurHHRNkLt9d6bAHt7BZT38eqV+GyngIi/tVye4jBKPYQ2lBdRs0glww4fmpuLRwA=="
+            referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
   </th:block>
 </head>
 <body>
@@ -19,17 +23,16 @@
           </div>
           <div class="card-body wizard-content">
             <h6 class="card-subtitle mb-3"></h6>
-            <form class="tab-wizard wizard-circle" id="form-solicitud" method="POST"
-                  th:object="${solicitud}"
-                  th:action="@{/solicitud/registrar}">
+            <form class="tab-wizard wizard-circle" id="form-solicitud">
               <!-- Step 1 -->
               <section>
+                {{solicitud}}
                 <h5>1. Seleccione su tipo de solicitud</h5>
                 <div class="row">
-                  <input type="hidden" th:field="*{tipoSolicitud}" v-model="tipoSolicitud">
+                  <input type="hidden" v-model="solicitud.tipoSolicitud">
                   <div class="col-md-4">
-                    <div :class="tipoSolicitud === 'SERVICIO_TECNICO' ? 'active' : ''"
-                         @click="tipoSolicitud = 'SERVICIO_TECNICO'"
+                    <div :class="solicitud.tipoSolicitud === 'SERVICIO_TECNICO' ? 'active' : ''"
+                         @click="solicitud.tipoSolicitud = 'SERVICIO_TECNICO'"
                          class="card bg-light-primary text-center p-2 rounded"
                          style="cursor: pointer">
                       <div class="card-text">
@@ -43,8 +46,8 @@
                   </div>
                   
                   <div class="col-md-4">
-                    <div :class="tipoSolicitud === 'RESERVA_DE_LABORATORIO' ? 'active' : ''"
-                         @click="tipoSolicitud = 'RESERVA_DE_LABORATORIO'"
+                    <div :class="solicitud.tipoSolicitud === 'RESERVA_DE_LABORATORIO' ? 'active' : ''"
+                         @click="solicitud.tipoSolicitud = 'RESERVA_DE_LABORATORIO'"
                          class="card bg-light-primary text-center p-2 rounded"
                          style="cursor: pointer">
                       <div class="card-text">
@@ -66,13 +69,13 @@
                   <div class="col-md-4">
                     <div class="mb-3">
                       <label for="nombres">Nombres :</label>
-                      <input class="form-control" id="nombres" th:field="*{cliente.nombre}" type="text"/>
+                      <input class="form-control" id="nombres" type="text" v-model="solicitud.cliente.nombre"/>
                     </div>
                   </div>
                   <div class="col-md-8">
                     <div class="mb-3">
                       <label for="paterno">Apellidos :</label>
-                      <input class="form-control" id="paterno" th:field="*{cliente.apellidos}" type="text"/>
+                      <input class="form-control" id="paterno" type="text" v-model="solicitud.cliente.apellidos"/>
                     </div>
                   </div>
                 </div>
@@ -80,66 +83,107 @@
                   <div class="col-md-4">
                     <div class="mb-3">
                       <label for="ci">CI :</label>
-                      <input class="form-control" id="ci" th:field="*{cliente.ci}" type="tel"/>
+                      <input class="form-control" id="ci" type="tel" v-model="solicitud.cliente.ci"/>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="mb-3">
                       <label for="celular">N° Celular :</label>
-                      <input class="form-control" id="celular" type="tel" th:field="*{cliente.celular}"/>
+                      <input class="form-control" id="celular" type="tel" v-model="solicitud.cliente.celular"/>
                     </div>
                   </div>
                 </div>
               </section>
               
-              <section v-if="tipoSolicitud === 'RESERVA_DE_LABORATORIO'">
+              <section v-if="solicitud.tipoSolicitud === 'RESERVA_DE_LABORATORIO'">
                 <h5>3. Datos de la reserva</h5>
                 <div class="row">
+                  <div class="col-md-6">
+                    <label for="nombre_actividad">Nombre de la actividad que se realizará:</label>
+                    <input class="form-control" id="nombre_actividad" v-model="solicitud.reserva.nombreActividad"/>
+                  </div>
                   <div class="col-md-12">
-                    <label for="motivo">Motivo de la reserva: (Escriba el nombre de su actividad a realizar)</label>
-                    <textarea class="form-control" id="motivo" name="motivoReserva"
-                              rows="3"></textarea>
+                    <label for="motivo">Motivo de la reserva:</label>
+                    <textarea class="form-control" id="motivo" rows="3"
+                              v-model="solicitud.reserva.motivo"></textarea>
                   </div>
                 </div>
               </section>
               
-              <section v-else-if="tipoSolicitud === 'SERVICIO_TECNICO'">
-                <h5>3. Datos de la solicitud</h5>
-                <div class="row">
+              <section v-else-if="solicitud.tipoSolicitud === 'SERVICIO_TECNICO'">
+                <div>
+                  <h5>3. Datos de la solicitud</h5>
+                  <button @click="agregarServicio();" class="btn btn-success rounded-pill px-4 mt-4" type="button">
+                    <div class="d-flex align-items-center">
+                      <i class="feather-sm me-1 fill-icon" data-feather="plus"></i>
+                      Agregar equipo
+                    </div>
+                  </button>
+                </div>
+                <div :key="indexServicio" class="row my-2" v-for="(servicio, indexServicio) in solicitud.listaServicio">
                   <div class="col-md-12">
-                    <label>Indique el motivo de su solicitud : (Marque las casillas)</label>
-                    <div class="col-md-12" th:each="tipoServicio: ${listaTipoServicio}">
-                      <div class="card border border-info border-2">
+                    <label>Datos del equipo:</label>
+                  </div>
+                  <div class="col-md-4">
+                    <label>Codigo UAP (Si no tiene, puede ignorar esto):</label>
+                    <input class="form-control" type="text" v-model="servicio.equipo.codUap">
+                  </div>
+                  <div class="col-md-4">
+                    <label>Categoria:</label>
+                    <select class="form-control" v-model="servicio.equipo.categoria">
+                      <option :key="indexCategoria" :value="categoria"
+                              v-for="(categoria, indexCategoria) in listaCategoria">
+                        {{ categoria }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label>Marca:</label>
+                    <input class="form-control" type="text" v-model="servicio.equipo.marca">
+                  </div>
+                  
+                  {{servicio.listaMotivo}}
+                  <div class="col-md-12">
+                    <label>Indique los motivos de la solicitud para este equipo : (Marque las casillas)</label>
+                    <div :key="indexTipoServicio" class="col-md-12"
+                         v-for="(tipoServicio, indexTipoServicio) in listaTipoServicio">
+                      <div class="card border border-info border-2 pb-2">
                         <div class="card-title bg-info text-white">
-                          <span class="mx-2" th:text="${tipoServicio.nombre}"></span>
+                          <span class="mx-2">{{tipoServicio.nombre}}</span>
                         </div>
-                        <div class="card-text px-2">
-                          <th:block th:each="motivo : ${tipoServicio.listaMotivo}">
-                            <label class="mx-2 bg-light-info px-2 py-1 rounded-pill" style="cursor: pointer;">
-                              <span th:text="${motivo.nombre}"></span>
-                              <input class="ms-1" type="checkbox" name="motivosSeleccionados" th:value="${motivo.idMotivo}">
-                            </label>
-                          </th:block>
+                        <div class="card-text px-2 d-flex flex-wrap gap-2">
+                          <template :key="indexMotivo" v-for="(motivo, indexMotivo) in tipoServicio.listaMotivo">
+                            <div @click="agregarMotivo(servicio, motivo)"
+                                   class="bg-light-info rounded-pill px-2 py-1" style="cursor: pointer;">
+                              <span>{{motivo.nombre}}</span>
+                              <input
+                                  :checked="solicitud.listaServicio[indexServicio].listaMotivo.findIndex(m => m.idMotivo === motivo.idMotivo) !== -1"
+                                  class="ms-1" type="checkbox">
+                            </div>
+                          </template>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>r
+                </div>
               </section>
               
               <section>
                 <h5>4. Descripción de la solicitud</h5>
-                <label v-if="tipoSolicitud === 'RESERVA_DE_LABORATORIO'">Describa en que fechas requiere y a que hora, si es necesario, el nombre del laboratorio</label>
-                <label v-else-if="tipoSolicitud === 'SERVICIO_TECNICO'">Describa algún dato adicional si lo requiere</label>
+                <label v-if="solicitud.tipoSolicitud === 'RESERVA_DE_LABORATORIO'">Describa en que fechas requiere y a
+                  que hora,
+                  si es necesario, el nombre del laboratorio</label>
+                <label v-else-if="solicitud.tipoSolicitud === 'SERVICIO_TECNICO'">Describa algún dato adicional si lo
+                  requiere</label>
                 <div class="row">
                   <div class="col-md-12">
                     <label for="descripcion"></label>
-                    <textarea class="form-control" id="descripcion" th:field="*{descripcion}"></textarea>
+                    <textarea class="form-control" id="descripcion" v-model="solicitud.descripcion"></textarea>
                   </div>
                 </div>
               </section>
               
-              <button class="btn btn-success rounded-pill px-4 mt-4" type="submit">
+              <button class="btn btn-success rounded-pill px-4 mt-4" type="button" @click="sendData();">
                 <div class="d-flex align-items-center">
                   <i class="feather-sm me-1 fill-icon" data-feather="save"></i>
                   Enviar solicitud
@@ -154,8 +198,9 @@
 </div>
 
 <div layout:fragment="script">
+  <script th:src="@{/dist/libs/sweetalert2/dist/sweetalert2.min.js}"></script>
   <style>
-    section{
+    section {
       margin-top: 1em;
       border-bottom: #d2d2d2 solid 3px;
     }
@@ -170,10 +215,84 @@
     
     createApp({
       setup() {
-        const listaTipoSolicitud = ['SERVICIO_TECNICO', 'RESERVA_DE_LABORATORIO']
-        const tipoSolicitud = ref('SERVICIO_TECNICO')
+        const listaTipoSolicitud = ['SERVICIO_TECNICO', 'RESERVA_DE_LABORATORIO'];
+        const listaCategoria = ref([])
+        const listaTipoServicio = ref([])
+        
+        const agregarServicio = () => {
+          solicitud.value.listaServicio.push({
+            idServicio: -1,
+            equipo: {},
+            listaMotivo: []
+          })
+        }
+        const agregarMotivo = (servicio, motivo) => {
+          if (!servicio.listaMotivo) {
+            servicio.listaMotivo = []
+          }
+          
+          if (!servicio.listaMotivo.find(sm => sm.idMotivo === motivo.idMotivo)) {
+            console.log("Se agrega el motivo");
+            servicio.listaMotivo.push({idMotivo: motivo.idMotivo})
+          } else {
+            console.log("Se elimina el motivo");
+            const index = servicio.listaMotivo.findIndex(sm => sm.idMotivo === motivo.idMotivo);
+            if (index > -1) {
+              servicio.listaMotivo.splice(index, 1);
+            }
+          }
+        }
+        
+        const fetchData = async () => {
+          const response = await axios.get('/equipo/categorias');
+          listaCategoria.value = await response.data;
+          
+          const response2 = await axios.get('/servicio/tipo-servicio');
+          listaTipoServicio.value = await response2.data;
+        }
+        
+        const sendData = async () => {
+          const response = await axios.post('/solicitud/api/v1/registrar', solicitud.value);
+          const data = await response.data;
+          console.log(data);
+          
+          if(response.status !== 200) return;
+          Swal.fire({
+            icon: 'success',
+            title: 'Enviado',
+            text: 'Se envio la solicitud con exito!',
+          })
+        }
+        
+        
+        fetchData();
+        const solicitud = ref({
+          tipoSolicitud: 'SERVICIO_TECNICO',
+          cliente: {
+            nombre: '',
+            apellidos: '',
+            ci: '',
+            celular: '',
+          },
+          reserva: {},
+          listaServicio: [{
+            idServicio: null,
+            equipo: {
+              codUap: '',
+              marca: '',
+              categoria: null,
+            },
+            listaMotivo: []
+          }],
+          descripcion: ''
+        })
         return {
-          tipoSolicitud
+          solicitud,
+          listaCategoria,
+          listaTipoServicio,
+          agregarMotivo,
+          agregarServicio,
+          sendData,
         }
       }
     }).mount('#app')
