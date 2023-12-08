@@ -14,5 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class AsignacionDto implements Serializable {
+  private TecnicoDto tecnico;
   private LocalDateTime fechaAsignacion;
 }

@@ -28,7 +28,7 @@ public class Reserva {
   @Column(name = "id_reserva", nullable = false)
   private Long idReserva;
 
-  @Column(name = "fecha_reserva", nullable = false)
+  @Column(name = "motivo", nullable = false)
   private String motivo;
 
   @Column(name = "nombre_actividad", length = 55)

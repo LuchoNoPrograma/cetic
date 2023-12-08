@@ -7,4 +7,6 @@ public interface ISolicitudService extends IServiceGenerico<Solicitud, Long> {
   Solicitud guardarDto(SolicitudDto solicitudDto);
 
   Solicitud aceptarSolicitudTecnica(SolicitudDto solicitudDto);
+
+  Solicitud finalizarSolicitudServicio(SolicitudDto solicitudDto);
 }

@@ -15,6 +15,7 @@ import uap.fit.cetic.model.enums.EstadoSolicitud;
 import uap.fit.cetic.model.enums.TipoSolicitud;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ public class SolicitudServiceImpl implements ISolicitudService {
   private final IServicioService servicioService;
   private final ModelMapper modelMapper;
   private final IDetalleServicioService detalleServicioService;
+  private final IPagoService pagoService;
 
   @Override
   public Solicitud buscarPorId(Long id) {
@@ -33,7 +35,7 @@ public class SolicitudServiceImpl implements ISolicitudService {
 
   @Override
   public List<Solicitud> listarTodos() {
-    return solicitudDao.findAll(Sort.by("fechaSolicitud").descending());
+    return solicitudDao.findAllOrderByFechaRegistro();
   }
 
   @Override
@@ -132,5 +134,32 @@ public class SolicitudServiceImpl implements ISolicitudService {
       servicio.setListaDetalleServicio(detalleServicioService.guardarTodos(listaDetalleServicio));
     });
     return this.guardar(solicitud);
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public Solicitud finalizarSolicitudServicio(SolicitudDto solicitudDto) {
+    Solicitud original = this.buscarPorId(solicitudDto.getNroSolicitud());
+    Solicitud solicitud = modelMapper.map(solicitudDto, Solicitud.class);
+    solicitud.setEstadoSolicitud(EstadoSolicitud.ACEPTADA);
+    solicitud.setFechaSolicitud(original.getFechaSolicitud());
+    Solicitud solicitudPersistido = this.guardar(solicitud);
+
+    List<Servicio> listaServicio = solicitudDto.getListaServicio().stream().map(servicioDto -> {
+      Servicio servicio = modelMapper.map(servicioDto, Servicio.class);
+
+      servicio.setSolicitud(Solicitud.builder().nroSolicitud(solicitudPersistido.getNroSolicitud()).build());
+      servicio.setEstadoServicio(EstadoServicio.FINALIZADO);
+      servicio.setListaDetalleServicio(List.of());
+      return servicio;
+    }).toList();
+
+    float montoTotal = (float) listaServicio.stream().mapToDouble(Servicio::getCostoTotal).sum();
+
+    Pago pago = Pago.builder().solicitud(solicitudPersistido).fechaPago(new Date()).monto(montoTotal).build();
+
+    pagoService.guardar(pago);
+    solicitudPersistido.setListaServicio(servicioService.guardarTodos(listaServicio));
+    return solicitudPersistido;
   }
 }

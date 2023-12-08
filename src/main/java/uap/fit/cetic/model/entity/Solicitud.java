@@ -1,7 +1,9 @@
 package uap.fit.cetic.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+import uap.fit.cetic.model.enums.EstadoServicio;
 import uap.fit.cetic.model.enums.EstadoSolicitud;
 import uap.fit.cetic.model.enums.TipoSolicitud;
 
@@ -36,6 +38,13 @@ public class Solicitud implements Serializable {
   @Column(name = "fecha_solicitud")
   private LocalDateTime fechaSolicitud;
 
+  @Column(name = "fecha_entrega")
+  private LocalDateTime fechaEntrega;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "id_tecnico")
+  private Tecnico tecnico;
+
   @Column(name = "observacion", length = 155)
   private String observacion;
 
@@ -49,5 +58,17 @@ public class Solicitud implements Serializable {
   @Column(name = "estado_solicitud")
   @Enumerated(EnumType.STRING)
   private EstadoSolicitud estadoSolicitud;
+
+  @Transient
+  @JsonProperty
+  @Getter(AccessLevel.NONE)
+  private boolean esValidoEntrega;
+
+  public boolean esValidoEntrega(){
+    if(this.tipoSolicitud == TipoSolicitud.SERVICIO_TECNICO && (this.listaServicio != null || this.listaServicio.isEmpty())){
+      return this.listaServicio.stream().allMatch(s -> s.getEstadoServicio() == EstadoServicio.FINALIZADO);
+    }
+    else return false;
+  }
 }
 

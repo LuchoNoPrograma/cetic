@@ -34,16 +34,16 @@
             <div class="py-2 d-flex justify-content-end">
               <!--AQUI TIENE QUE IR LA RUTA DE TU GETMAPPING-->
               <a class="btn btn-primary" th:href="@{/solicitud/form-registrar}">
-                Registrar  <i class="feather-sm fill-white" data-feather="file-plus"></i>
+                Registrar <i class="feather-sm fill-white" data-feather="file-plus"></i>
               </a>
             </div>
             <table class="table table-bordered table-striped" id="tabla-equipo">
               <thead>
               <tr>
                 <th>N° Solicitud</th>
+                <th>Fecha de solicitud</th>
                 <th>Cliente</th>
                 <th>Tipo de solicitud</th>
-                <th>Fecha de solicitud</th>
                 <th>Estado</th>
                 <th>Operaciones</th>
               </tr>
@@ -52,17 +52,39 @@
               <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaEquipo", listaEquipo);-->
               <tr th:each="solicitud : ${listaSolicitud}">
                 <td th:text="${solicitud.nroSolicitud}"></td>
-                <td th:text="${solicitud.cliente.nombre+' '+solicitud.cliente.apellidos}"></td>
-                <td th:text="${solicitud.tipoSolicitud.nombreFormal}"></td>
                 <td th:text="${#temporals.format(solicitud.fechaSolicitud, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${solicitud.cliente?.nombre+' '+solicitud.cliente?.apellidos}"></td>
+                <td th:text="${solicitud.tipoSolicitud.nombreFormal}"></td>
                 <td th:text="${solicitud.estadoSolicitud}"></td>
                 <td>
-                  <th:block th:if="${solicitud.tipoSolicitud.name() == 'SERVICIO_TECNICO'}">
+                  <th:block
+                      th:if="${solicitud.tipoSolicitud.name() == 'SERVICIO_TECNICO' && solicitud.estadoSolicitud.name() == 'PENDIENTE'}">
+                    <a class="btn btn-success btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"
+                       th:href="@{/servicio/solicitud/{nroSolicitud}/atender(nroSolicitud=${solicitud.nroSolicitud})}"
+                       title="Atender servicio">
+                      <i class="feather-sm fill-white" data-feather="check"></i>
+                    </a>
+                  </th:block>
+                  
+                  <th:block
+                      th:if="${solicitud.tipoSolicitud.name() == 'SERVICIO_TECNICO' && solicitud.estadoSolicitud.name() == 'ACEPTADA'&& !solicitud.esValidoEntrega()}">
                     <a class="btn btn-info btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"
-                       th:href="@{/servicio/solicitud/{nroSolicitud}/atender(nroSolicitud=${solicitud.nroSolicitud})}" title="Atender servicio">
+                       th:href="@{/servicio/solicitud/{nroSolicitud}/seguimiento-servicio(nroSolicitud=${solicitud.nroSolicitud})}"
+                       title="Seguimiento servicio">
                       <i class="feather-sm fill-white" data-feather="edit"></i>
                     </a>
                   </th:block>
+                  
+                  <th:block
+                      th:if="${solicitud.tipoSolicitud.name() == 'SERVICIO_TECNICO' && solicitud.estadoSolicitud.name() == 'ACEPTADA' && solicitud.esValidoEntrega()}">
+                    <a class="btn btn-info btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"
+                       target="_blank"
+                       th:href="@{/solicitud/api/v1/informe-servicio-equipo/{nroSolicitud}(nroSolicitud=${solicitud.nroSolicitud})}" title="Informe de entrega">
+                      <i class="feather-sm fill-white" data-feather="archive"></i>
+                    </a>
+                  </th:block>
+                  
+                  
                   <th:block th:if="${solicitud.tipoSolicitud.name() == 'RESERVA_DE_LABORATORIO'}">
                     <a class="btn btn-info btn-circle"
                        data-bs-placement="top"
@@ -95,7 +117,9 @@
   <script th:src="@{/dist/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
   <script th:src="@{/dist/libs/sweetalert2/dist/sweetalert2.min.js}"></script>
   <script>
-    $("#tabla-equipo").DataTable();
+    $("#tabla-equipo").DataTable({
+      "ordering": false
+    });
     
     //ESTE METODO ES PARA ELIMINAR Y SE ENVIA A TU METODO DE ELIMINAR DEL CONTROLADOR
     function eliminarEquipo(nroSolicitud) {

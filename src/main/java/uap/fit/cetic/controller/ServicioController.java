@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uap.fit.cetic.dto.MotivoDto;
-import uap.fit.cetic.dto.ServicioDto;
 import uap.fit.cetic.dto.TipoServicioDto;
-import uap.fit.cetic.model.entity.Servicio;
+import uap.fit.cetic.model.service.IReporteService;
 import uap.fit.cetic.model.service.IServicioService;
 import uap.fit.cetic.model.service.ISolicitudService;
 import uap.fit.cetic.model.service.ITipoServicioService;
@@ -27,6 +26,7 @@ public class ServicioController {
   private final IServicioService servicioService;
   private final ISolicitudService solicitudService;
   private final ITipoServicioService tipoServicioService;
+  private final IReporteService reporteService;
 
   @GetMapping("/solicitud/{nroSolicitud}/form-registrar")
   public String formRegistro(Model model, @PathVariable Long nroSolicitud) {
@@ -38,6 +38,12 @@ public class ServicioController {
   public String atenderSolicitud(Model model, @PathVariable Long nroSolicitud) {
     model.addAttribute("solicitud", solicitudService.buscarPorId(nroSolicitud));
     return "vista-servicio/servicio-atender";
+  }
+
+  @GetMapping("/solicitud/{nroSolicitud}/seguimiento-servicio")
+  public String seguimientoSolicitudConServicios(Model model, @PathVariable Long nroSolicitud) {
+    model.addAttribute("solicitud", solicitudService.buscarPorId(nroSolicitud));
+    return "vista-servicio/servicio-seguimiento";
   }
 
   @ResponseBody
