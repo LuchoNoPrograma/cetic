@@ -51,7 +51,7 @@
                             <tr th:each="cliente : ${listaCliente}" th:if="${cliente?.estadoCliente?.name() != 'ELIMINADO'}">
                                 <td th:text="${cliente.nombre}"></td>
                                 <td th:text="${cliente.apellidos}"></td>
-                                <td th:text="${cliente.CI}"></td>
+                                <td th:text="${cliente.ci}"></td>
                                 <td th:text="${cliente.celular}"></td>
                                 <td th:text="${cliente.email}"></td>
                                 <td>
