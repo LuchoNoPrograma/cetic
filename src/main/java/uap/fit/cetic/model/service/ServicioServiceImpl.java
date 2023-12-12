@@ -24,6 +24,10 @@ public class ServicioServiceImpl implements IServicioService {
     return servicioDao.findAll(Sort.by("idServicio").ascending());
   }
 
+  public List<Servicio> listarTodosOrderByNroSolicitud() {
+    return servicioDao.findAllOrderByNroSolicitudDesc();
+  }
+
   @Override
   public Servicio guardar(Servicio entidad) {
     return servicioDao.save(entidad);
@@ -37,5 +41,10 @@ public class ServicioServiceImpl implements IServicioService {
   @Override
   public List<Servicio> guardarTodos(List<Servicio> listaServicio) {
     return servicioDao.saveAll(listaServicio);
+  }
+
+  @Override
+  public List<Servicio> listarTodosSolicitudAceptada() {
+    return servicioDao.findAllSolicitudAceptada();
   }
 }

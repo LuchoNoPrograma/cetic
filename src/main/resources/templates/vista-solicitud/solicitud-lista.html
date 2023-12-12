@@ -79,14 +79,23 @@
                       th:if="${solicitud.tipoSolicitud.name() == 'SERVICIO_TECNICO' && solicitud.estadoSolicitud.name() == 'ACEPTADA' && solicitud.esValidoEntrega()}">
                     <a class="btn btn-info btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"
                        target="_blank"
-                       th:href="@{/solicitud/api/v1/informe-servicio-equipo/{nroSolicitud}(nroSolicitud=${solicitud.nroSolicitud})}" title="Informe de entrega">
+                       th:href="@{/solicitud/api/v1/informe-servicio-equipo/{nroSolicitud}(nroSolicitud=${solicitud.nroSolicitud})}" title="Imprimir informe de entrega">
                       <i class="feather-sm fill-white" data-feather="archive"></i>
+                    </a>
+                  </th:block>
+                  
+                  <th:block
+                      th:if="${solicitud.tipoSolicitud.name() == 'SERVICIO_TECNICO'}">
+                    <a class="btn btn-light-secondary btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"
+                       target="_blank"
+                       th:href="@{/solicitud/api/v1/solicitud-servicio/{nroSolicitud}(nroSolicitud=${solicitud.nroSolicitud})}" title="Imprimir solicitud de servicio tecnico">
+                      <i class="feather-sm fill-white" data-feather="printer"></i>
                     </a>
                   </th:block>
                   
                   
                   <th:block th:if="${solicitud.tipoSolicitud.name() == 'RESERVA_DE_LABORATORIO'}">
-                    <a class="btn btn-info btn-circle"
+                    <a class="btn btn-light-secondary btn-circle"
                        data-bs-placement="top"
                        data-bs-toggle="tooltip"
                        th:href="@{/reserva/solicitud/{nroSolicitud}/agendar(nroSolicitud=${solicitud.nroSolicitud})}"
@@ -116,6 +125,8 @@
 <div layout:fragment="script">
   <script th:src="@{/dist/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
   <script th:src="@{/dist/libs/sweetalert2/dist/sweetalert2.min.js}"></script>
+  <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
   <script>
     $("#tabla-equipo").DataTable({
       "ordering": false

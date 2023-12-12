@@ -5,4 +5,6 @@ import uap.fit.cetic.model.entity.Solicitud;
 
 public interface IReporteService {
   ReporteDto reporteInformeServiciosEquipos(Solicitud solicitud);
+
+  ReporteDto reporteSolicitudServicio(Solicitud solicitud);
 }

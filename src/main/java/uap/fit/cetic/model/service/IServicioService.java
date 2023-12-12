@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IServicioService extends IServiceGenerico<Servicio, Long> {
   List<Servicio> guardarTodos(List<Servicio> listaServicio);
+  List<Servicio> listarTodosSolicitudAceptada();
 }

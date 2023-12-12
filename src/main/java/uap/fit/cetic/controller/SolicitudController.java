@@ -70,6 +70,7 @@ public class SolicitudController {
     return ResponseEntity.ok(modelMapper.map(solicitud, SolicitudDto.class));
   }
 
+
   @ResponseBody
   @PutMapping("/api/v1/aceptar-servicio-tecnico")
   public ResponseEntity<?> aceptarSolicitudTecnica(@RequestBody SolicitudDto solicitudDto) {
@@ -108,6 +109,13 @@ public class SolicitudController {
   }
 
   @ResponseBody
+  @PutMapping("/api/v1/seguimiento-solicitud-servicio")
+  public ResponseEntity<?> guardarSeguimientoSolicitud(@RequestBody SolicitudDto solicitudDto) {
+    Solicitud solicitud = solicitudService.guardarSeguimientoSolicitud(solicitudDto);
+    return ResponseEntity.ok(modelMapper.map(solicitud, SolicitudDto.class));
+  }
+
+  @ResponseBody
   @PostMapping("/api/v1/finalizar-solicitud-servicio")
   public ResponseEntity<?> finalizarSolicitudServicio(@RequestBody SolicitudDto solicitudDto) {
     Solicitud solicitud = solicitudService.finalizarSolicitudServicio(solicitudDto);
@@ -121,6 +129,14 @@ public class SolicitudController {
     solicitud.setEstadoSolicitud(EstadoSolicitud.RECHAZADA);
     solicitudService.guardar(solicitud);
     return ResponseEntity.ok("Solicitud rechazada correctamente, N° de Solicitud: " + solicitud.getNroSolicitud());
+  }
+
+  @ResponseBody
+  @GetMapping(value = "/api/v1/solicitud-servicio/{nroSolicitud}", produces = MediaType.APPLICATION_PDF_VALUE)
+  public ResponseEntity<?> reporteSolicitudServicio(@PathVariable Long nroSolicitud) {
+    Solicitud solicitud = solicitudService.buscarPorId(nroSolicitud);
+    ReporteDto reporteDto = reporteService.reporteSolicitudServicio(solicitud);
+    return ResponseEntityUtil.getResponseEntityPdf(reporteDto);
   }
 
   @ResponseBody

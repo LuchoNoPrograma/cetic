@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{/plantilla/plantilla-admin}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Title</title>
+  <th:block layout:fragment="head">
+    <link rel="stylesheet" th:href="@{/dist/libs/sweetalert2/dist/sweetalert2.min.css}">
+  </th:block>
+</head>
+<body>
+<div layout:fragment="contenido">
+  
+  <!--AQUI COMIENZAS TU LISTA, LO DEMAS COPIAS Y PEGAS-->
+  <div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+      <h3 class="text-themecolor mb-0">Equipos</h3>
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item active">
+          <a th:href="@{/solicitud/lista}">Lista de solicitudes</a>
+        </li>
+      </ol>
+    </div>
+  </div>
+  
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header bg-info">
+            <h4 class="mb-0 text-white">Lista de servicios (Solicitudes aceptadas)</h4>
+          </div>
+          <div class="card-body">
+            <div class="py-2 d-flex justify-content-end">
+              <!--AQUI TIENE QUE IR LA RUTA DE TU GETMAPPING-->
+              <!--<a class="btn btn-primary" th:href="@{/solicitud/form-registrar}">
+                Registrar <i class="feather-sm fill-white" data-feather="file-plus"></i>
+              </a>-->
+            </div>
+            <table class="table table-bordered" id="tabla-servicio">
+              <thead>
+              <tr>
+                <th>N° Solicitud</th>
+                <th>Persona que solicitó</th>
+                <th>Diágnostico</th>
+                <th>Estado</th>
+                <th>Operaciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              <!--ESTA LISTA SOLO ENVIA SERVICIOS DE SOLICITUDES ACEPTADAS;-->
+              <tr th:each="servicio : ${listaServicio}" th:attr="data-solicitud=${servicio?.solicitud?.nroSolicitud}">
+                <td th:text="'N° Solicitud: ' + ${servicio?.solicitud?.nroSolicitud}"></td>
+                <td th:text="${servicio?.solicitud?.cliente?.apellidos + ' ' + servicio?.solicitud?.cliente?.nombre}"></td>
+                <td th:text="${servicio.diagnostico}"></td>
+                <td th:text="${servicio.estadoServicio}"></td>
+                <td>
+                  <th:block
+                      th:if="${servicio.solicitud.estadoSolicitud.name() == 'ACEPTADA'&& !servicio.solicitud.esValidoEntrega()}">
+                    <a class="btn btn-info btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"s
+                       th:href="@{/servicio/solicitud/{nroSolicitud}/seguimiento-servicio(nroSolicitud=${servicio.solicitud.nroSolicitud})}"
+                       title="Seguimiento servicio">
+                      <i class="feather-sm fill-white" data-feather="edit"></i>
+                    </a>
+                  </th:block>
+                  
+                  <th:block
+                      th:if="${servicio.solicitud.estadoSolicitud.name() == 'ACEPTADA' && servicio.solicitud.esValidoEntrega()}">
+                    <a class="btn btn-info btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"
+                       target="_blank"
+                       th:href="@{/solicitud/api/v1/informe-servicio-equipo/{nroSolicitud}(nroSolicitud=${servicio.solicitud.nroSolicitud})}" title="Informe de entrega">
+                      <i class="feather-sm fill-white" data-feather="archive"></i>
+                    </a>
+                  </th:block>
+                  
+                  <th:block>
+                    <a class="btn btn-light-secondary btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"
+                       target="_blank"
+                       th:href="@{/solicitud/api/v1/solicitud-servicio/{nroSolicitud}(nroSolicitud=${servicio.solicitud.nroSolicitud})}" title="Imprimir solicitud de servicio tecnico">
+                      <i class="feather-sm fill-white" data-feather="printer"></i>
+                    </a>
+                  </th:block>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--    AQUI TERMINA TU LISTA, LO DEMAS COPIAS Y PEGAS-->
+</div>
+<div layout:fragment="script">
+  <script th:src="@{/dist/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
+  <script th:src="@{/dist/libs/sweetalert2/dist/sweetalert2.min.js}"></script>
+  <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tabla-servicio').DataTable({
+        "ordering": false,
+        "columnDefs": [
+          {"visible": false, "targets": 0} // Oculta la primera columna (N° Solicitud)
+        ],
+        "order": [
+            [0, 'asc']
+        ], // Ordena por la primera columna (N° Solicitud)
+        "displayLength": 25,
+        "drawCallback": function (settings) {
+          var api = this.api();
+          var rows = api.rows({page: 'current'}).nodes();
+          var last = null;
+          
+          api.column(0, {page: 'current'}).data().each(function (group, i) {
+            if (last !== group) {
+              $(rows).eq(i).before(
+                  '<tr class="group"><td colspan="5" class="bg-light-secondary">' + group + '</td></tr>'
+              );
+              last = group;
+            }
+          });
+        }
+      });
+    });
+  </script>
+</div>
+</body>
+</html>

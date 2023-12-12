@@ -34,29 +34,11 @@
 
                         <!--En th:field="*{idEquipo}" se refiere al id del equipo, esto hace referencia a la columna de tu entidad-->
                         <!--Haces lo mismo para todos-->
-                        <input th:field="*{idCliente}" type="hidden"/>
+                        <input th:field="*{idPersona}" type="hidden"/>
                         <div>
                             <div class="card-body">
-                                <h4 class="card-title">Información del equipo</h4>
+                                <h4 class="card-title">Información del cliente</h4>
                                 <div class="row pt-3">
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label class="control-label" for="categoria">Categoria:</label>
-                                            <!--El th:field="*{categoria}" se refiere a la columna categoria de tu entidad-->
-                                            <select class="form-control" id="categoria" th:field="*{categoria}">
-                                                <option hidden th:value="null">--SELECCIONE--</option>
-                                                <!--Repetir esto por cada categoria en la variable listaCategoria que viene del controlador
-                                                model.addAttribute("listaCategoria", listaCategoria);
-                                                -->
-                                                <option th:each="categoria : ${listaCategoria}"
-                                                        th:text="${categoria.nombreFormal}"
-                                                        th:value="${categoria.name}"></option>
-                                            </select>
-                                            <small class="form-control-feedback">
-                                                Seleccione la categoria del cliente
-                                            </small>
-                                        </div>
-                                    </div>
                                     <!--/span-->
                                     <div class="col-md-4">
                                         <div class="mb-3">
@@ -79,7 +61,7 @@
                                         <div class="mb-3">
                                             <label class="control-label" for="CI">CI: </label>
                                             <input class="form-control" id="CI" placeholder="--ESCRIBA--"
-                                                   th:field="*{CI}"/>
+                                                   th:field="*{ci}"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -95,8 +77,8 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="control-label" for="email">Email: </label>
-                                            <input class="form-control" id="mail" placeholder="--ESCRIBA--"
-                                                   th:field="*{Email}"/>
+                                            <input class="form-control" id="email" placeholder="--ESCRIBA--"
+                                                   th:field="*{email}"/>
                                         </div>
                                     </div> 
                                 </div>

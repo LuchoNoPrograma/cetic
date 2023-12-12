@@ -1,6 +1,5 @@
 package uap.fit.cetic.model.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -22,6 +21,11 @@ public class LaboratorioServiceImpl implements ILaboratorioService {
   @Override
   public List<Laboratorio> listarTodos() {
     return laboratorioDao.findAll(Sort.by("nombre").ascending());
+  }
+
+  @Override
+  public List<Laboratorio> listarTodosDisponibles(){
+    return laboratorioDao.findAllDisponibles();
   }
 
   @Override

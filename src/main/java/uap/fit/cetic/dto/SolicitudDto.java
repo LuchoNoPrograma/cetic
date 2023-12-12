@@ -20,6 +20,7 @@ public class SolicitudDto implements Serializable {
 
   private ReservaDto reserva;
   private ClienteDto cliente;
+  private TecnicoDto tecnico;
 
   private Long nroSolicitud;
   private LocalDateTime fechaSolicitud;

@@ -6,6 +6,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.time.LocalTime;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,22 +22,22 @@ public class Tecnico implements Serializable {
     @Column(name = "id_tecnico")
     private Long idTecnico;
 
-    @Column(name = "nombre", nullable = false, length = 30)
+    @Column(name = "nombre", length = 30)
     private String nombre;
 
-    @Column(name = "apellidos", nullable = false, length = 75)
+    @Column(name = "apellidos", length = 75)
     private String apellidos;
 
-    @Column(name = "ci", nullable = false, length = 30)
+    @Column(name = "ci", length = 30)
     private String ci;
 
-    @Column(name = "celular", nullable = false, length = 10)
+    @Column(name = "celular", length = 10)
     private String celular;
 
     @Column(name = "email", length = 55)
     private String email;
 
-    @Column(name = "ru", nullable = false, unique = true, length = 15)
+    @Column(name = "ru", unique = true, length = 15)
     private String ru;
     
     @Column(name = "horario", length = 100)

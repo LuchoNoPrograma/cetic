@@ -32,7 +32,7 @@
                     <div class="card-body">
                         <div class="py-2 d-flex justify-content-end">
                             <!--AQUI TIENE QUE IR LA RUTA DE TU GETMAPPING-->
-                            <a class="btn btn-primary" th:href="@{/equipo/form-registrar}">
+                            <a class="btn btn-primary" th:href="@{/cliente/formulario}">
                                 Registrar  <i class="feather-sm fill-white" data-feather="file-plus"></i>
                             </a>
                         </div>
@@ -48,7 +48,7 @@
                             </thead>
                             <tbody>
                             <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaCliente", listaCliente);-->
-                            <tr th:each="cliente : ${listaCliente}" th:if="${cliente?.estadoCliente?.name() != 'ELIMINADO'}">
+                            <tr th:each="cliente : ${listaCliente}">
                                 <td th:text="${cliente.nombre}"></td>
                                 <td th:text="${cliente.apellidos}"></td>
                                 <td th:text="${cliente.ci}"></td>
@@ -59,13 +59,13 @@
                                     <a class="btn btn-info btn-circle"
                                        data-bs-placement="top"
                                        data-bs-toggle="tooltip"
-                                       th:href="@{/cliente/form-modificar/{idCliente}(idCliente=${cliente.idCliente})}"
+                                       th:href="@{/cliente/form-modificar/{idCliente}(idCliente=${cliente.idPersona})}"
                                        title="Modificar">
                                         <i class="feather-sm fill-white" data-feather="edit"></i>
                                     </a>
                                     <button class="btn btn-danger btn-circle"
                                        data-bs-placement="top" data-bs-toggle="tooltip"
-                                       th:attr="onclick='eliminarCliente(\'' + ${cliente.idCliente} + '\')'"
+                                       th:attr="onclick='eliminarCliente(\'' + ${cliente.idPersona} + '\')'"
                                        title="Eliminar">
                                         <i class="feather-sm fill-white" data-feather="trash-2"></i>
                                     </button>

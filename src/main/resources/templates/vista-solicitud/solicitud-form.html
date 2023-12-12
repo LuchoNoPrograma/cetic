@@ -129,6 +129,10 @@
                     <input class="form-control" type="text" v-model="servicio.equipo.codUap">
                   </div>
                   <div class="col-md-4">
+                    <label>Codigo serie(Opcional):</label>
+                    <input class="form-control" type="text" v-model="servicio.equipo.codSerie">
+                  </div>
+                  <div class="col-md-4">
                     <label>Categoria:</label>
                     <select class="form-control" v-model="servicio.equipo.categoria">
                       <option :key="indexCategoria" :value="categoria"
@@ -136,10 +140,6 @@
                         {{ categoria }}
                       </option>
                     </select>
-                  </div>
-                  <div class="col-md-4">
-                    <label>Marca:</label>
-                    <input class="form-control" type="text" v-model="servicio.equipo.marca">
                   </div>
                   
                   {{servicio.listaMotivo}}
@@ -254,14 +254,32 @@
         const sendData = async () => {
           const response = await axios.post('/solicitud/api/v1/registrar', solicitud.value);
           const data = await response.data;
-          console.log(data);
           
           if(response.status !== 200) return;
-          Swal.fire({
-            icon: 'success',
-            title: 'Enviado',
-            text: 'Se envio la solicitud con exito!',
-          })
+          if(data.tipoSolicitud === 'SERVICIO_TECNICO'){
+            Swal.fire({
+              icon: 'success',
+              title: 'Enviado',
+              text: 'Se envio la solicitud con éxito, debe descargar su solicitud y apersonarse a la unidad con su respectivo equipo!',
+            });
+          }else{
+            Swal.fire({
+              icon: 'success',
+              title: 'Enviado',
+              text: 'Se envio la solicitud con éxito, debe descargar su solicitud y apersonarse a la unidad para realizar su reserva de laboratorio!',
+            });
+          }
+          
+          const response2 = await fetch(`/solicitud/api/v1/solicitud-servicio/${data.nroSolicitud}`);
+          const blob = await response2.blob();
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = urlBlob;
+          a.download = 'SOLICITUD DE SERVICIO TÉCNICO.pdf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(urlBlob);
         }
         
         
@@ -279,7 +297,7 @@
             idServicio: null,
             equipo: {
               codUap: '',
-              marca: '',
+              codSerie: '',
               categoria: null,
             },
             listaMotivo: []

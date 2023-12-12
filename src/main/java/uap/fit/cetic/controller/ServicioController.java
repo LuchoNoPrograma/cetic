@@ -2,6 +2,7 @@ package uap.fit.cetic.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,11 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uap.fit.cetic.dto.MotivoDto;
+import uap.fit.cetic.dto.ReporteDto;
 import uap.fit.cetic.dto.TipoServicioDto;
+import uap.fit.cetic.model.entity.Solicitud;
 import uap.fit.cetic.model.service.IReporteService;
 import uap.fit.cetic.model.service.IServicioService;
 import uap.fit.cetic.model.service.ISolicitudService;
 import uap.fit.cetic.model.service.ITipoServicioService;
+import uap.fit.cetic.util.ResponseEntityUtil;
 
 import java.util.List;
 
@@ -27,6 +31,13 @@ public class ServicioController {
   private final ISolicitudService solicitudService;
   private final ITipoServicioService tipoServicioService;
   private final IReporteService reporteService;
+
+  @GetMapping("/lista")
+  public String lista(Model model) {
+    model.addAttribute("listaServicio", servicioService.listarTodosSolicitudAceptada());
+    return "vista-servicio/servicio-lista";
+
+  }
 
   @GetMapping("/solicitud/{nroSolicitud}/form-registrar")
   public String formRegistro(Model model, @PathVariable Long nroSolicitud) {

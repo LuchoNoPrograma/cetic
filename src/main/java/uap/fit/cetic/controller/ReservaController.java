@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import uap.fit.cetic.dto.EventoCalendarioDto;
 import uap.fit.cetic.model.entity.Reserva;
+import uap.fit.cetic.model.service.ILaboratorioService;
 import uap.fit.cetic.model.service.IReservaService;
 import uap.fit.cetic.model.service.ISolicitudService;
 
@@ -22,11 +20,12 @@ import java.util.List;
 public class ReservaController {
   private final IReservaService reservaService;
   private final ISolicitudService solicitudService;
+  private final ILaboratorioService laboratorioService;
 
   @GetMapping("/solicitud/{nroSolicitud}/agendar")
   public String agendar(@PathVariable Long nroSolicitud, Model model) {
     model.addAttribute("solicitud", solicitudService.buscarPorId(nroSolicitud));
-    model.addAttribute("listaReserva", reservaService.listarPorNroSolicitud(nroSolicitud));
+    model.addAttribute("listaLaboratorio", laboratorioService.listarTodosDisponibles());
     return "vista-reserva/reserva-agenda";
   }
 
@@ -48,5 +47,11 @@ public class ReservaController {
     });
 
     return ResponseEntity.ok(listaEventosCalendario);
+  }
+
+  @ResponseBody
+  @PostMapping
+  public ResponseEntity<?> registrarDetalleReserva(@RequestBody DetalleReservaDto detalleReservaDto){
+    return ResponseEntity.ok("xd");
   }
 }

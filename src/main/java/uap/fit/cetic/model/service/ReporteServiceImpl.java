@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -26,7 +25,6 @@ public class ReporteServiceImpl implements IReporteService {
   @Override
   public ReporteDto reporteInformeServiciosEquipos(Solicitud solicitud) {
     String archivoOriginal = "informe_servicios_equipos";
-
     String nombreArchivo = "INFORME DE SERVICIOS DE EQUIPOS";
 
     ReporteDto dto = new ReporteDto();
@@ -41,6 +39,26 @@ public class ReporteServiceImpl implements IReporteService {
     params.put("ci", solicitud.getCliente().getCi());
     params.put("celular", solicitud.getCliente().getCelular());
     params.put("nombre_completo_tecnico", solicitud.getTecnico().getNombre()+" "+solicitud.getTecnico().getApellidos());
+
+    return getReporteDto(archivoOriginal, dto, params);
+  }
+
+  @Override
+  public ReporteDto reporteSolicitudServicio(Solicitud solicitud){
+    String archivoOriginal = "solicitud_servicio";
+    String nombreArchivo = "SOLICITUD DE SERVICIO TÉCNICO";
+
+    ReporteDto dto = new ReporteDto();
+    dto.setFileName(nombreArchivo + ".pdf");
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("logo_uap", "http://virtual.uap.edu.bo:6061/images/posgrado/logo_uap.png");
+    params.put("nro_solicitud", solicitud.getNroSolicitud());
+    params.put("fecha_solicitud", this.getFechaImpresion(solicitud.getFechaSolicitud()));
+    params.put("nombre_completo", solicitud.getCliente().getNombre()+" "+solicitud.getCliente().getApellidos());
+    params.put("ci", solicitud.getCliente().getCi());
+    params.put("celular", solicitud.getCliente().getCelular());
+    params.put("descripcion", solicitud.getDescripcion());
 
     return getReporteDto(archivoOriginal, dto, params);
   }

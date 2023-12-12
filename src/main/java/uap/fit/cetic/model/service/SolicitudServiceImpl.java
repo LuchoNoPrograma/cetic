@@ -27,6 +27,7 @@ public class SolicitudServiceImpl implements ISolicitudService {
   private final ModelMapper modelMapper;
   private final IDetalleServicioService detalleServicioService;
   private final IPagoService pagoService;
+  private final ITecnicoService tecnicoService;
 
   @Override
   public Solicitud buscarPorId(Long id) {
@@ -93,6 +94,9 @@ public class SolicitudServiceImpl implements ISolicitudService {
     Solicitud solicitud = modelMapper.map(solicitudDto, Solicitud.class);
     solicitud.setEstadoSolicitud(EstadoSolicitud.ACEPTADA);
     solicitud.setFechaSolicitud(original.getFechaSolicitud());
+    //Solo recibir el id para no realizar ninguna modificacion ni persistencia
+    solicitud.setTecnico(tecnicoService.buscarPorId(solicitudDto.getTecnico().getIdTecnico()));
+
     Solicitud solicitudPersistido = this.guardar(solicitud);
 
     List<Servicio> listaServicio = solicitudDto.getListaServicio().stream().map(servicioDto -> {
@@ -161,5 +165,27 @@ public class SolicitudServiceImpl implements ISolicitudService {
     pagoService.guardar(pago);
     solicitudPersistido.setListaServicio(servicioService.guardarTodos(listaServicio));
     return solicitudPersistido;
+  }
+
+  @Override
+  public Solicitud guardarSeguimientoSolicitud(SolicitudDto solicitudDto) {
+      Solicitud original = this.buscarPorId(solicitudDto.getNroSolicitud());
+      Solicitud solicitud = modelMapper.map(solicitudDto, Solicitud.class);
+      solicitud.setEstadoSolicitud(original.getEstadoSolicitud());
+      solicitud.setFechaSolicitud(original.getFechaSolicitud());
+
+      Solicitud solicitudPersistido = this.guardar(solicitud);
+
+      List<Servicio> listaServicio = solicitudDto.getListaServicio().stream().map(servicioDto -> {
+        Servicio servicio = modelMapper.map(servicioDto, Servicio.class);
+
+        servicio.setSolicitud(Solicitud.builder().nroSolicitud(solicitudPersistido.getNroSolicitud()).build());
+        //El estado viene del DTO
+
+        return servicio;
+      }).toList();
+
+      solicitudPersistido.setListaServicio(servicioService.guardarTodos(listaServicio));
+      return solicitudPersistido;
   }
 }

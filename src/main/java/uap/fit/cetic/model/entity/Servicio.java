@@ -29,7 +29,7 @@ public class Servicio implements Serializable {
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
     private List<Asignacion> listaAsignacion;
 
-    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.PERSIST)
     private List<DetalleServicio> listaDetalleServicio;
 
     @ManyToOne(fetch = FetchType.LAZY)
