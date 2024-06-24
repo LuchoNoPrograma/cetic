@@ -59,6 +59,9 @@ public class SolicitudController {
   @GetMapping("/lista")
   public String lista(Model model) {
     model.addAttribute("listaSolicitud", solicitudService.listarTodos());
+    model.addAttribute("nPendientes", solicitudService.contarByEstadoSolicitud(EstadoSolicitud.PENDIENTE));
+    model.addAttribute("nAceptadas", solicitudService.contarByEstadoSolicitud(EstadoSolicitud.ACEPTADA));
+    model.addAttribute("nRechazadas", solicitudService.contarByEstadoSolicitud(EstadoSolicitud.RECHAZADA));
     return "vista-solicitud/solicitud-lista";
   }
 

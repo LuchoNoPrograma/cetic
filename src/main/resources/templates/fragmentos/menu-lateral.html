@@ -21,36 +21,9 @@
             <div class="profile-text pt-1 dropdown">
                 <a aria-expanded="false" class="dropdown-toggle u-dropdown w-100 text-white d-block position-relative"
                    data-bs-toggle="dropdown" href="#" id="dropdownMenuLink">
-                    Markarn Doe
+                    Admin
                 </a>
                 <div aria-labelledby="dropdownMenuLink" class="dropdown-menu animated flipInY">
-                    <a class="dropdown-item" href="#">
-                        <i class="feather-sm text-info me-1 ms-1" data-feather="user"></i>
-                        My Profile
-                    </a>
-                    <a class="dropdown-item" href="#"
-                    ><i
-                            class="feather-sm text-info me-1 ms-1"
-                            data-feather="credit-card"
-                    ></i>
-                        My Balance</a
-                    >
-                    <a class="dropdown-item" href="#"
-                    ><i
-                            class="feather-sm text-success me-1 ms-1"
-                            data-feather="mail"
-                    ></i>
-                        Inbox</a
-                    >
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#"
-                    ><i
-                            class="feather-sm text-warning me-1 ms-1"
-                            data-feather="settings"
-                    ></i>
-                        Account Setting</a
-                    >
-                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="authentication-login3.html"
                     ><i
                             class="feather-sm text-danger me-1 ms-1"
@@ -59,11 +32,6 @@
                         Logout</a
                     >
                     <div class="dropdown-divider"></div>
-                    <div class="ps-4 p-2">
-                        <a class="btn d-block w-100 btn-info rounded-pill" href="#"
-                        >View Profile</a
-                        >
-                    </div>
                 </div>
             </div>
         </div>
@@ -71,9 +39,9 @@
         <!-- Sidebar navigation-->
         <!-- PREGUNTAR COMO TRAER ESTOS MENUS Y ENLACES DESDE LA BASE DE DATOS CON THYMELEAF Y SPRING BOOT-->
         <nav class="sidebar-nav">
-          <ul id="sidebarnav">
+          <!--<ul id="sidebarnav">
             <li th:each="menu : ${session.listaMenus}" class="sidebar-item">
-              <!--th:href="${menu?.ruta}"-->
+              &lt;!&ndash;th:href="${menu?.ruta}"&ndash;&gt;
               <a aria-expanded="false" class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)">
                 <i class="mdi mdi-gauge"></i>
                 <span class="hide-menu" th:text="${menu.nombre}"></span>
@@ -87,9 +55,9 @@
                 </li>
               </ul>
             </li>
-          </ul>
+          </ul>-->
           
-          <!--<ul id="sidebarnav">
+          <ul id="sidebarnav">
               <li class="nav-small-cap">
                   <i class="mdi mdi-dots-horizontal"></i>
                   <span class="hide-menu">Personal</span>
@@ -122,6 +90,12 @@
                               <span class="hide-menu"> Registrar categoria </span>
                           </a>
                       </li>
+                      <li class="sidebar-item">
+                          <a class="sidebar-link" th:href="@{/tecnico/lista}">
+                              <i class="mdi mdi-adjust"></i>
+                              <span class="hide-menu"> Ver tecnicos </span>
+                          </a>
+                      </li>
                   </ul>
               </li>
 
@@ -140,7 +114,7 @@
               <i class="mdi mdi-dots-horizontal"></i>
               <span class="hide-menu">Reservas</span>
             </li>
-          </ul>-->
+          </ul>
         </nav>
         <!-- End Sidebar navigation -->
     </div>

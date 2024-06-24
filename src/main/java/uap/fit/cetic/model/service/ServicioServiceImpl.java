@@ -1,11 +1,11 @@
 package uap.fit.cetic.model.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uap.fit.cetic.model.dao.IServicioDao;
 import uap.fit.cetic.model.entity.Servicio;
+import uap.fit.cetic.model.enums.EstadoServicio;
 
 import java.util.List;
 
@@ -46,5 +46,10 @@ public class ServicioServiceImpl implements IServicioService {
   @Override
   public List<Servicio> listarTodosSolicitudAceptada() {
     return servicioDao.findAllSolicitudAceptada();
+  }
+
+  @Override
+  public Long contarPorEstadoServicio(EstadoServicio estadoServicio){
+    return servicioDao.countByEstadoServicio(estadoServicio);
   }
 }

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{/plantilla/plantilla-admin}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Title</title>
+  <th:block layout:fragment="head">
+    <link rel="stylesheet" th:href="@{/dist/libs/sweetalert2/dist/sweetalert2.min.css}">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha512-b94Z6431JyXY14iSXwgzeZurHHRNkLt9d6bAHt7BZT38eqV+GyngIi/tVye4jBKPYQ2lBdRs0glww4fmpuLRwA=="
+            referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <style>
+      hr {
+        border: #d2d2d2 solid 3px;
+      }
+    </style>
+  </th:block>
+</head>
+<body>
+<div id="app" layout:fragment="contenido">
+  <div class="container-fluid">
+    <div class="row page-titles">
+      <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-0">Equipos</h3>
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item">
+            <a th:href="@{/solicitud/lista}">Lista de solicitudes</a>
+          </li>
+          <li class="breadcrumb-item active">Seguimiento de servicio técnico</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header bg-info">
+            <h4 class="mb-0 text-white">Atender solicitud de servicio técnico</h4>
+          </div>
+          <!--ESTE METODO IRA AL @PostMapping de tu controlador-->
+          <!--LA VARIABLE ${equipo} se recibe del controlador mediante model.addAttribute("equipo", new Equipo());
+          o el otro model.addAttribute("equipo", equipo);
+          -->
+          <form>
+            
+            <!--En th:field="*{idEquipo}" se refiere al id del equipo, esto hace referencia a la columna de tu entidad-->
+            <!--Haces lo mismo para todos-->
+            <input id="nroSolicitud" th:value="${solicitud.nroSolicitud}" type="hidden"/>
+            <div>
+              <div class="card-body">
+                <section class="row pt-3">
+                  <h4><span class="bg-info text-white px-3 py-1">1. Información de la solicitud</span></h4>
+                  <!--/span-->
+                  <div class="col-md-8">
+                    <label class="control-label" for="descripcion">Descripción:</label>
+                    <!--Lo mismo aqui con el th:field-->
+                    <textarea :value="solicitud.descripcion" class="form-control" id="descripcion"
+                              placeholder="--ESCRIBA--" rows="1"></textarea>
+                  </div>
+                  
+                  <div class="col-md-4">
+                    <label for="fechaSolicitud">Fecha de la solicitud :</label>
+                    <input :value="solicitud.fechaSolicitud" class="form-control" id="fechaSolicitud" readonly
+                           type="datetime-local"/>
+                  </div>
+                  <!--/span-->
+                </section>
+                <!--/row-->
+                <hr>
+                <section>
+                  <h4><span class="bg-info text-white px-3 py-1">2. Información personal</span></h4>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="mb-3">
+                        <label for="nombres">Nombres :</label>
+                        <input class="form-control" id="nombres" type="text" v-model="solicitud.cliente.nombre"/>
+                      </div>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="mb-3">
+                        <label for="paterno">Apellidos :</label>
+                        <input class="form-control" id="paterno" type="text" v-model="solicitud.cliente.apellidos"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="mb-3">
+                        <label for="ci">CI :</label>
+                        <input class="form-control" id="ci" type="tel" v-model="solicitud.cliente.ci"/>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="mb-3">
+                        <label for="celular">N° Celular :</label>
+                        <input class="form-control" id="celular" type="tel" v-model="solicitud.cliente.celular"/>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                
+                <hr>
+                <section class="row mb-6">
+                  <h4><span class="bg-info text-white px-3 py-1">3. Técnico responsable></span></h4>
+                  <div class="row">
+                    <div class="col-md-12 mb-2">
+                      <label>Debe designar el técnico responsable de atender <span class="fw-bold">la solicitud:</span></label>
+                      <select class="form-select" v-model="solicitud.tecnico">
+                        <option hidden value="null">--SELECCIONE--</option>
+                        <option :key="indexTecnico" :value="tecnico"
+                                v-for="(tecnico, indexTecnico) in listaTecnico" :selected="tecnico.idTecnico === solicitud.tecnico.idTecnico"
+                        >
+                          {{tecnico.apellidos + " " + tecnico.nombre}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </section>
+                
+                <!--/row-->
+                <hr>
+                <section class="row mb-6">
+                  <h4><span class="bg-info text-white px-3 py-1">4. Lista de servicios solicitados</span>
+                  </h4>
+                  <div :key="indexServicio" class="row mx-2 py-2 rounded"
+                       style="margin-bottom: 3em; border: 3px solid #2e6da4"
+                       v-for="(servicio, indexServicio) in solicitud.listaServicio">
+                    <div class="col-md-12">
+                      <label>1.- Datos del equipo:</label>
+                    </div>
+                    <!--{{servicio}}-->
+                    <div class="col-md-4">
+                      <label>Categoria:</label>
+                      <select class="form-control" v-model="servicio.equipo.categoria">
+                        <option :key="indexCategoria" :value="categoria"
+                                v-for="(categoria, indexCategoria) in listaCategoria">
+                          {{ categoria }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label>Codigo Serie:</label>
+                      <input class="form-control" placeholder="--ESCRIBA--" type="text"
+                             v-model="servicio.equipo.codSerie">
+                    </div>
+                    <div class="col-md-4">
+                      <label>Codigo UAP (Opcional):</label>
+                      <input class="form-control" placeholder="--ESCRIBA--" type="text"
+                             v-model="servicio.equipo.codUap">
+                    </div>
+                    <div class="col-md-4">
+                      <label>Marca:</label>
+                      <input class="form-control" placeholder="--ESCRIBA--" type="text" v-model="servicio.equipo.marca">
+                    </div>
+                    <div class="col-md-4">
+                      <label>Modelo:</label>
+                      <input class="form-control" placeholder="--ESCRIBA--" type="text"
+                             v-model="servicio.equipo.modelo">
+                    </div>
+                    <div class="col-md-4">
+                      <label>Color: </label>
+                      <select class="form-control custom-select" id="color" v-model="servicio.equipo.color">
+                        <option hidden value="null">--SELECCIONE--</option>
+                        <option value="BLANCO">BLANCO</option>
+                        <option value="NEGRO">NEGRO</option>
+                        <option value="GRIS">GRIS</option>
+                        <option value="ROJO">ROJO</option>
+                        <option value="AZUL">AZUL</option>
+                      </select>
+                    </div>
+                    
+                    <div class="col-md-12 mt-4">
+                      <label>2. Datos del servicio: </label>
+                    </div>
+                    <div class="col-md-12 mb-2">
+                      <label>Motivos del servicio al equipo: </label>
+                      <div class="d-flex flex-wrap gap-2">
+                        <template :key="indexMotivo" v-for="(motivo, indexMotivo) in servicio.listaMotivo">
+                          <div
+                              class="bg-light-info rounded-pill px-2 py-1">
+                            <span>{{motivo.nombre}}</span>
+                            <input checked class="ms-1" onclick="return false;" type="checkbox">
+                          </div>
+                        </template>
+                      </div>
+                    </div>
+                    <div class="col-md-12 mb-2">
+                      <label>Diagnostico general:</label>
+                      <input class="form-control" placeholder="--ESCRIBA--" type="text"
+                             v-model="servicio.diagnostico">
+                    </div>
+                    
+                    <div class="col-md-12 mb-2">
+                      <label>Tecnicos asignados:</label>
+                      <select class="form-select" multiple v-model="servicio.listaTecnico">
+                        <option hidden value="null">--SELECCIONE--</option>
+                        <option :key="indexTecnico"
+                                :selected="servicio.listaAsignacion.find(asignacion => asignacion.tecnico.idTecnico === tecnico.idTecnico)"
+                                :value="tecnico"
+                                v-for="(tecnico, indexTecnico) in listaTecnico"
+                        >
+                          {{tecnico.apellidos + " " + tecnico.nombre}}
+                        </option>
+                      </select>
+                    </div>
+                    
+                    <div class="col-md-12 mb-2">
+                      <label>Estado actual del servicio: </label>
+                      <div class="d-flex flex-wrap gap-2">
+                        <input type="hidden" v-model="servicio.estadoServicio"/>
+                        <div @click="servicio.estadoServicio = 'PENDIENTE'"
+                             class="bg-info rounded-pill px-2 py-1 text-white" style="cursor: pointer">
+                          Pendiente
+                          <input :checked="servicio.estadoServicio === 'PENDIENTE'" class="ms-1" type="checkbox">
+                        </div>
+                        
+                        <div @click="servicio.estadoServicio = 'FINALIZADO'"
+                             class="bg-info rounded-pill px-2 py-1 text-white" style="cursor: pointer">
+                          Finalizado
+                          <input :checked="servicio.estadoServicio === 'FINALIZADO'" class="ms-1" type="checkbox">
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-12 mb-2 my-3">
+                      <label>3. Detalles del servicio: </label>
+                      <!--<button @click="agregarDetalleServicio(servicio);"
+                              class="btn btn-success rounded-pill px-2 btn-sm ms-4"
+                              type="button">
+                        <div class="d-flex align-items-center">
+                          <i class="feather-sm me-1 fill-icon" data-feather="plus"></i>
+                          Agregar detalle
+                        </div>
+                      </button>-->
+                    </div>
+                    
+                    <table class="table table-bordered table-striped">
+                      <thead>
+                      <tr class="table-info">
+                        <th>N°</th>
+                        <th>Descripción</th>
+                        <th>Costo en Bs.</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr :key="indexDetalleServicio" style="height: 3em !important;"
+                          v-for="(detalleServicio, indexDetalleServicio) in servicio.listaDetalleServicio">
+                        <td class="text-center fw-bold">{{indexDetalleServicio + 1}}</td>
+                        <td class="py-0 px-0" style="padding: 0; height: 100%">
+                          <input class="form-control" style="height: 100%" type="text"
+                                 v-model="detalleServicio.descripcion">
+                        </td>
+                        <td class="py-0 px-0" style="padding: 0; height: 100%">
+                          <input @input="calcularTotal(servicio)" class="form-control" style="height: 100%" type="text"
+                                 v-model="detalleServicio.costo">
+                        </td>
+                      </tr>
+                      </tbody>
+                      <tfoot>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="fw-bold">{{servicio.costoTotal}} Bs.</td>
+                      </tr>
+                      </tfoot>
+                    </table>
+                    
+                    <div class="col-md-12">
+                      <label>4. Observacion especifica</label>
+                      <textarea class="form-control" cols="30" placeholder="--ESCRIBA SUS OBSERVACIONES DE LA SOLICITUD--"
+                                rows="3"
+                                v-model="servicio.observacion"></textarea>
+                    </div>
+                  </div>
+              </div>
+              </section>
+              
+              <hr>
+              <section class="row">
+                <h4><span class="bg-info text-white px-3 py-1">5. Observaciones generales</span></h4>
+                <div class="col-md-12">
+                  <textarea class="form-control" cols="30" id="observaciones" placeholder="--ESCRIBA SUS OBSERVACIONES DE LA SOLICITUD--"
+                            rows="3"
+                            v-model="solicitud.observacion"></textarea>
+                </div>
+              </section>
+              
+              <section class="row">
+                <h4><span class="bg-info text-white px-3 py-1">6. Resúmen</span></h4>
+                <div class="col-md-12">
+                  <h4 class="fw-bold">Resúmen total de todos los servicios en Bs.</h4>
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="table-info">
+                      <th>Equipo - Cod. Serie</th>
+                      <th>Diagnostico</th>
+                      <th>Estado</th>
+                      <th>Total en Bs</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr :key="indexServicio" v-for="(servicio, indexServicio) in solicitud.listaServicio">
+                      <td>{{servicio.equipo.categoria}} - {{servicio.equipo.codSerie}}</td>
+                      <td>{{servicio.diagnostico}}</td>
+                      <td>{{servicio.estadoServicio}}</td>
+                      <td>{{servicio.costoTotal}} Bs.</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td class="fw-bold">{{costoTotalServicios}} Bs.</td>
+                    </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </section>
+            </div>
+            <hr/>
+            <div class="form-actions">
+              <div class="card-body border-top">
+                <p class="fw-bold">Consideraciones</p>
+                <p>Para realizar la entrega de los equipos, todos los servicios deben ser marcados como "FINALIZADO",
+                  caso contrario no podra guardar y realizar la entrega</p>
+                <button @click="sendDataGuardarCambios();" class="btn btn-success rounded-pill px-4 me-2"
+                        type="button"
+                >
+                  <div class="d-flex align-items-center">
+                    <i class="feather-sm me-1 fill-icon" data-feather="save"></i>
+                    Guardar cambios
+                  </div>
+                </button>
+                <button
+                    :disabled="solicitud.listaServicio.some((servicio) => servicio.estadoServicio === 'PENDIENTE')"
+                    @click="sendDataFinalizar();" class="btn btn-info rounded-pill px-4 me-2"
+                    type="button"
+                >
+                  <div class="d-flex align-items-center">
+                    <i class="feather-sm me-1 fill-icon" data-feather="dollar-sign"></i>
+                    Guardar y entregar
+                  </div>
+                </button>
+                <button class="btn btn-danger rounded-pill px-4 me-2 text-white"
+                        onclick="window.history.back();"
+                        type="button">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div layout:fragment="script">
+  <script th:src="@{/dist/libs/sweetalert2/dist/sweetalert2.min.js}"></script>
+  
+  <script>
+    const {createApp, ref, computed} = Vue;
+    
+    const nroSolicitud = document.querySelector("#nroSolicitud")
+    
+    const app = createApp({
+      setup() {
+        const listaCategoria = ref([])
+        const listaTipoServicio = ref([])
+        const listaTecnico = ref([]);
+        const solicitud = ref({
+          cliente: {},
+          listaServicio: [{
+            equipo: {},
+            listaMotivo: [],
+            listaTecnico: [],
+            listaDetalleServicio: [{
+              descripcion: null,
+              costo: null
+            }]
+          }]
+        });
+        
+        const agregarDetalleServicio = (servicio) => {
+          servicio.listaDetalleServicio.push({
+            costo: null,
+            descripcion: null
+          })
+        }
+        
+        const calcularTotal = (servicio) => {
+          servicio.costoTotal = servicio.listaDetalleServicio.reduce((acc, ds) => {
+            if (isNaN(ds.costo)) {
+              return acc
+            }
+            return acc + (+ds.costo)
+          }, 0);
+        }
+        
+        const costoTotalServicios = computed(() => {
+          return solicitud.value.listaServicio.reduce((acc, servicio) => {
+            if (isNaN(servicio.costoTotal)) {
+              return acc
+            }
+            return acc + (+servicio.costoTotal)
+          }, 0)
+        });
+        const calcularCostoTotal = () => {
+          solicitud.value.costoTotal = solicitud.value.listaServicio.reduce((acc, servicio) => {
+            if (isNaN(servicio.costoTotal)) {
+              return acc
+            }
+            return acc + (+servicio.costoTotal)
+          }, 0);
+        }
+        
+        const fetchData = async () => {
+          const response = await axios.get(`/solicitud/api/v1/${nroSolicitud.value}/servicio-tecnico`);
+          solicitud.value = await response.data;
+          solicitud.value.listaServicio.forEach(s => {
+            if (!s.listaDetalleServicio || s.listaDetalleServicio.length === 0) {
+              s.listaDetalleServicio = [{descripcion: '', costo: ''}]
+            }
+          });
+          
+          const response2 = await axios.get('/equipo/categorias');
+          listaCategoria.value = await response2.data;
+          
+          const response3 = await axios.get('/servicio/tipo-servicio');
+          listaTipoServicio.value = await response3.data;
+          
+          const response4 = await axios.get('/asignacion/api/v1/tecnicos/disponibles');
+          listaTecnico.value = await response4.data;
+        }
+        
+        fetchData();
+        
+        const sendDataFinalizar = async () => {
+          const response = await axios.post('/solicitud/api/v1/finalizar-solicitud-servicio', solicitud.value)
+          const data = await response.data
+          console.log(data)
+          
+          if (response.status !== 200) return;
+          const result = await Swal.fire({
+            icon: 'success',
+            title: 'Enviado con exito',
+            text: 'Se ha finalizado el seguimiento a la solicitud con exito! Descargue la boleta de informe de servicio.',
+          });
+          
+          if (result.isConfirmed) {
+            window.location.href = '/solicitud/lista'; // Redirigir a la ruta /solicitud/lista
+          }
+          
+          const response2 = await axios.get(`solicitud/api/v1/informe-servicio-equipo/${data.nroSolicitud}`, {
+            responseType: 'blob', // Esperamos una respuesta binaria
+          });
+          
+          const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
+          const a = document.createElement('a');
+          a.href = urlBlob;
+          a.download = 'INFORME DE ENTREGA DE EQUIPOS.pdf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(urlBlob);
+        }
+        
+        const sendDataGuardarCambios = async () => {
+          const response = await axios.put(`/solicitud/api/v1/seguimiento-solicitud-servicio`, solicitud.value);
+          const data = await response.data;
+          console.log(data);
+          
+          if (response.status !== 200) return;
+          const result = await Swal.fire({
+            icon: 'success',
+            title: 'Enviado con exito',
+            text: 'Se ha guardado el seguimiento de la solicitud con éxito!',
+          });
+          
+          if (result.isConfirmed) {
+            window.location.href = '/servicio/lista'; // Redirigir a la ruta /solicitud/lista
+          }
+        }
+        
+        return {
+          listaCategoria,
+          listaTipoServicio,
+          listaTecnico,
+          solicitud,
+          agregarDetalleServicio,
+          calcularTotal,
+          sendDataFinalizar,
+          sendDataGuardarCambios,
+          costoTotalServicios
+        }
+      }
+    });
+    
+    app.mount('#app');
+  </script>
+</div>
+</body>
+</html>

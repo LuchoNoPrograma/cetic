@@ -565,17 +565,17 @@
           /*extendedProps: {calendar: getModalCheckedRadioBtnValue},*/
         };
         
-        const response = await axios.post(`/reserva/api/v1/detalle-reserva`, detalleReserva);
+        /*const response = await axios.post(`/reserva/api/v1/detalle-reserva`, detalleReserva);
         if(response.status !== 200) return;
-        const data = response.data;
-        /*calendar.addEvent({
+        const data = response.data;*/
+        calendar.addEvent({
           id: 12,
-          title: getTitleValue,
-          start: setModalStartDateValue,
-          end: setModalEndDateValue,
+          title: detalleReserva.title,
+          start: detalleReserva.start,
+          end: detalleReserva.end,
           allDay: true,
           extendedProps: {calendar: getModalCheckedRadioBtnValue},
-        });*/
+        });
         myModal.hide();
       });
       /*=====================*/

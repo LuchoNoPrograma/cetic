@@ -25,6 +25,48 @@
   
   <div class="container-fluid">
     <div class="row">
+      <div class="col-md-4">
+        <div class="card bg-info">
+          <div class="card-body text-white">
+            <div class="d-flex flex-row align-items-center">
+              <div class=" round rounded-circle text-white d-inline-block text-center bg-light-info text-info">
+                <i class="fill-white text-info" data-feather="users"></i>
+              </div>
+              <div class="ms-3">
+                <span class="text-white-50">SERVICIOS</span>
+                <h4 class="mb-0 text-white">PENDIENTES</h4>
+              </div>
+              <div class="ms-auto">
+                <h2 class="font-weight-medium mb-0 text-white" th:text="${nPendientes}"></h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success">
+          <div class="card-body text-white">
+            <div class="d-flex flex-row align-items-center">
+              <div class=" round rounded-circle text-white d-inline-block text-center bg-light-success text-success">
+                <i
+                    class="fill-white text-success"
+                    data-feather="credit-card"
+                ></i>
+              </div>
+              <div class="ms-3">
+                <span class="text-white-50">SERVICIOS</span>
+                <h4 class="mb-0 text-white">FINALIZADOS</h4>
+              </div>
+              <div class="ms-auto">
+                <h2 class="font-weight-medium mb-0 text-white" th:text="${nFinalizados}"></h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+    <div class="row">
       <div class="col-md-12">
         <div class="card">
           <div class="card-header bg-info">
@@ -41,7 +83,7 @@
               <thead>
               <tr>
                 <th>N° Solicitud</th>
-                <th>Persona que solicitó</th>
+                <th>Equipo</th>
                 <th>Diágnostico</th>
                 <th>Estado</th>
                 <th>Operaciones</th>
@@ -49,15 +91,18 @@
               </thead>
               <tbody>
               <!--ESTA LISTA SOLO ENVIA SERVICIOS DE SOLICITUDES ACEPTADAS;-->
-              <tr th:each="servicio : ${listaServicio}" th:attr="data-solicitud=${servicio?.solicitud?.nroSolicitud}">
-                <td th:text="'N° Solicitud: ' + ${servicio?.solicitud?.nroSolicitud}"></td>
-                <td th:text="${servicio?.solicitud?.cliente?.apellidos + ' ' + servicio?.solicitud?.cliente?.nombre}"></td>
+              <tr th:attr="data-solicitud=${servicio?.solicitud?.nroSolicitud}" th:each="servicio : ${listaServicio}">
+                <td th:text="'N° Solicitud: ' + ${servicio?.solicitud?.nroSolicitud}
+                + ' - Cliente: ' + ${servicio?.solicitud?.cliente?.apellidos + ' ' + servicio?.solicitud?.cliente?.nombre}
+                 + ' - Fecha de solicitud: ' + ${#temporals.format(servicio?.solicitud?.fechaSolicitud, 'dd/MM/yyyy HH:mm')}"></td>
+                <!--<td th:text="${servicio?.solicitud?.cliente?.apellidos + ' ' + servicio?.solicitud?.cliente?.nombre}"></td>-->
+                <td th:text="${servicio?.equipo?.categoria}+'/'+${servicio?.equipo?.marca}"></td>
                 <td th:text="${servicio.diagnostico}"></td>
                 <td th:text="${servicio.estadoServicio}"></td>
                 <td>
                   <th:block
                       th:if="${servicio.solicitud.estadoSolicitud.name() == 'ACEPTADA'&& !servicio.solicitud.esValidoEntrega()}">
-                    <a class="btn btn-info btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"s
+                    <a class="btn btn-info btn-circle" data-bs-placement="top" data-bs-toggle="tooltip" s
                        th:href="@{/servicio/solicitud/{nroSolicitud}/seguimiento-servicio(nroSolicitud=${servicio.solicitud.nroSolicitud})}"
                        title="Seguimiento servicio">
                       <i class="feather-sm fill-white" data-feather="edit"></i>
@@ -68,18 +113,20 @@
                       th:if="${servicio.solicitud.estadoSolicitud.name() == 'ACEPTADA' && servicio.solicitud.esValidoEntrega()}">
                     <a class="btn btn-info btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"
                        target="_blank"
-                       th:href="@{/solicitud/api/v1/informe-servicio-equipo/{nroSolicitud}(nroSolicitud=${servicio.solicitud.nroSolicitud})}" title="Informe de entrega">
+                       th:href="@{/solicitud/api/v1/informe-servicio-equipo/{nroSolicitud}(nroSolicitud=${servicio.solicitud.nroSolicitud})}"
+                       title="Informe de entrega">
                       <i class="feather-sm fill-white" data-feather="archive"></i>
                     </a>
                   </th:block>
                   
-                  <th:block>
+                  <!--<th:block>
                     <a class="btn btn-light-secondary btn-circle" data-bs-placement="top" data-bs-toggle="tooltip"
                        target="_blank"
-                       th:href="@{/solicitud/api/v1/solicitud-servicio/{nroSolicitud}(nroSolicitud=${servicio.solicitud.nroSolicitud})}" title="Imprimir solicitud de servicio tecnico">
+                       th:href="@{/solicitud/api/v1/solicitud-servicio/{nroSolicitud}(nroSolicitud=${servicio.solicitud.nroSolicitud})}"
+                       title="Imprimir solicitud de servicio tecnico">
                       <i class="feather-sm fill-white" data-feather="printer"></i>
                     </a>
-                  </th:block>
+                  </th:block>-->
                 </td>
               </tr>
               </tbody>
@@ -105,7 +152,7 @@
           {"visible": false, "targets": 0} // Oculta la primera columna (N° Solicitud)
         ],
         "order": [
-            [0, 'asc']
+          [0, 'asc']
         ], // Ordena por la primera columna (N° Solicitud)
         "displayLength": 25,
         "drawCallback": function (settings) {

@@ -2,10 +2,8 @@ package uap.fit.cetic.model.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uap.fit.cetic.dto.DetalleServicioDto;
 import uap.fit.cetic.dto.SolicitudDto;
 import uap.fit.cetic.model.dao.ISolicitudDao;
 import uap.fit.cetic.model.entity.*;
@@ -14,6 +12,7 @@ import uap.fit.cetic.model.enums.EstadoServicio;
 import uap.fit.cetic.model.enums.EstadoSolicitud;
 import uap.fit.cetic.model.enums.TipoSolicitud;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -187,5 +186,10 @@ public class SolicitudServiceImpl implements ISolicitudService {
 
       solicitudPersistido.setListaServicio(servicioService.guardarTodos(listaServicio));
       return solicitudPersistido;
+  }
+
+  @Override
+  public Long contarByEstadoSolicitud(EstadoSolicitud estadoSolicitud) {
+    return solicitudDao.contarByEstadoSolicitud(estadoSolicitud);
   }
 }

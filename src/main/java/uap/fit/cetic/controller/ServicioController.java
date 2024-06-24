@@ -14,6 +14,7 @@ import uap.fit.cetic.dto.MotivoDto;
 import uap.fit.cetic.dto.ReporteDto;
 import uap.fit.cetic.dto.TipoServicioDto;
 import uap.fit.cetic.model.entity.Solicitud;
+import uap.fit.cetic.model.enums.EstadoServicio;
 import uap.fit.cetic.model.service.IReporteService;
 import uap.fit.cetic.model.service.IServicioService;
 import uap.fit.cetic.model.service.ISolicitudService;
@@ -35,6 +36,8 @@ public class ServicioController {
   @GetMapping("/lista")
   public String lista(Model model) {
     model.addAttribute("listaServicio", servicioService.listarTodosSolicitudAceptada());
+    model.addAttribute("nPendientes", servicioService.contarPorEstadoServicio(EstadoServicio.PENDIENTE));
+    model.addAttribute("nFinalizados", servicioService.contarPorEstadoServicio(EstadoServicio.FINALIZADO));
     return "vista-servicio/servicio-lista";
 
   }

@@ -14,7 +14,7 @@
   <!--AQUI COMIENZAS TU LISTA, LO DEMAS COPIAS Y PEGAS-->
   <div class="row page-titles">
     <div class="col-md-5 col-12 align-self-center">
-      <h3 class="text-themecolor mb-0">Equipos</h3>
+      <h3 class="text-themecolor mb-0">Solicitudes</h3>
       <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item active">
           <a th:href="@{/solicitud/lista}">Lista de solicitudes</a>
@@ -25,10 +25,76 @@
   
   <div class="container-fluid">
     <div class="row">
+      <div class="col-md-4">
+        <div class="card bg-info">
+          <div class="card-body text-white">
+            <div class="d-flex flex-row align-items-center">
+              <div class=" round rounded-circle text-white d-inline-block text-center bg-light-info text-info">
+                <i data-feather="users" class="fill-white text-info"></i>
+              </div>
+              <div class="ms-3">
+                <span class="text-white-50">SOLICITUDES</span>
+                <h4 class="mb-0 text-white">PENDIENTES</h4>
+              </div>
+              <div class="ms-auto">
+                <h2 class="font-weight-medium mb-0 text-white" th:text="${nPendientes}"></h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success">
+          <div class="card-body text-white">
+            <div class="d-flex flex-row align-items-center">
+              <div class=" round rounded-circle text-white d-inline-block text-center bg-light-success text-success">
+                <i
+                    data-feather="credit-card"
+                    class="fill-white text-success"
+                ></i>
+              </div>
+              <div class="ms-3">
+                <span class="text-white-50">SOLICITUDES</span>
+                <h4 class="mb-0 text-white">ACEPTADAS</h4>
+              </div>
+              <div class="ms-auto">
+                <h2 class="font-weight-medium mb-0 text-white"  th:text="${nAceptadas}"></h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="card bg-danger">
+          <div class="card-body text-white">
+            <div class="d-flex flex-row align-items-center">
+              <div class=" round rounded-circle text-white d-inline-block text-center bg-light-danger text-danger">
+                <i
+                    data-feather="settings"
+                    class="fill-white text-danger"
+                ></i>
+              </div>
+              <div class="ms-3">
+                <span class="text-white-50">SOLICITUDES</span>
+                <h4 class="mb-0 text-white">RECHAZADAS</h4>
+              </div>
+              <div class="ms-auto">
+                <h2 class="font-weight-medium mb-0 text-white" th:text="${nRechazadas}"></h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="row">
       <div class="col-md-12">
         <div class="card">
           <div class="card-header bg-info">
-            <h4 class="mb-0 text-white">Lista de solicitudes</h4>
+            <h4 class="mb-0 text-white">
+              Lista de solicitudes</h4>
           </div>
           <div class="card-body">
             <div class="py-2 d-flex justify-content-end">
@@ -104,10 +170,10 @@
                     </a>
                   </th:block>
                   <!--ESTOS BOTONES COPIAS Y PEGAS Y LO CAMBIAS POR TUS RUTAS-->
-                  <button class="btn btn-danger btn-circle"
+                  <button th:if="${solicitud.estadoSolicitud.name() == 'PENDIENTE'}" class="btn btn-danger btn-circle"
                           data-bs-placement="top" data-bs-toggle="tooltip"
                           th:attr="onclick='eliminarEquipo(\'' + ${solicitud.nroSolicitud} + '\')'"
-                          title="Rechaxar">
+                          title="Rechazar">
                     <i class="feather-sm fill-white" data-feather="x"></i>
                   </button>
                 </td>

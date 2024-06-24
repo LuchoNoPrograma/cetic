@@ -52,21 +52,20 @@
                             </thead>
                             <tbody>
                             <!--ESTA LISTA SE RECIBE DESDE EL CONTROLADOR model.addAttribute("listaTecnico", listaTecnico);-->
-                            <tr th:each="equipo : ${listaTecnico}" th:if="${Tecnico?.name() != 'ELIMINADO'}">
-                                <td th:text="${id_tecnico}"></td>
-                                <td th:text="${nombre}"></td>
-                                <td th:text="${apellido}"></td>
-                                <td th:text="${ci}"></td>
-                                <td th:text="${celular}"></td>
-                                <td th:text="${email}"></td>
-                                <td th:text="${ru}"></td>
-                                <td th:text="${descripccion}"></td>
+                            <tr th:each="tecnico : ${listaTecnico}" th:if="${Tecnico?.name() != 'ELIMINADO'}">
+                                <td th:text="${tecnico.idTecnico}"></td>
+                                <td th:text="${tecnico.nombre}"></td>
+                                <td th:text="${tecnico.apellidos}"></td>
+                                <td th:text="${tecnico.ci}"></td>
+                                <td th:text="${tecnico.celular}"></td>
+                                <td th:text="${tecnico.email}"></td>
+                                <td th:text="${tecnico.ru}"></td>
                                 <td>
                                     <!--ESTOS BOTONES COPIAS Y PEGAS Y LO CAMBIAS POR TUS RUTAS-->
                                     <a class="btn btn-info btn-circle"
                                        data-bs-placement="top"
                                        data-bs-toggle="tooltip"
-                                       th:href="@{/tecnico/form-modificar/{idTecnico}(idTecnico=${tecnico.idTecnico})}"
+                                       th:href="@{/tecnico/formulario(idTecnico=${tecnico.idTecnico})}"
                                        title="Modificar">
                                         <i class="feather-sm fill-white" data-feather="edit"></i>
                                     </a>
