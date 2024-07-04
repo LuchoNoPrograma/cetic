@@ -10,7 +10,7 @@
 </head>
 <body>
 <div layout:fragment="contenido">
-  
+
   <!--AQUI COMIENZAS TU LISTA, LO DEMAS COPIAS Y PEGAS-->
   <div class="row page-titles">
     <div class="col-md-5 col-12 align-self-center">
@@ -23,7 +23,7 @@
       </ol>
     </div>
   </div>
-  
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
@@ -49,19 +49,19 @@
                 <input class="form-control" id="celular" readonly th:field="${solicitud.cliente.ci}" type="text"/>
               </div>
             </div>
-            
+
             <div class="row">
               <div class="col-md-3">
+                <label for="fechaSolicitud">Fecha de la solicitud :</label>
+                <input class="form-control" id="fechaSolicitud" readonly th:value="${solicitud.fechaSolicitud}"/>
+              </div>
+
+              <div class="col-md-4">
+                <input type="hidden" id="nombreActividad" th:value="${solicitud?.reserva.nombreActividad}">
                 <label for="motivo">Motivo de la reserva(Eventos) :</label>
                 <textarea class="form-control" id="motivo" readonly th:text="${solicitud?.reserva?.motivo}"></textarea>
               </div>
-              
-              <div class="col-md-4">
-                <label for="fechaSolicitud">Fecha de la solicitud :</label>
-                <input class="form-control" id="fechaSolicitud" readonly th:value="${solicitud.fechaSolicitud}"
-                       type="datetime-local"/>
-              </div>
-              
+
               <div class="col-md-5">
                 <label for="descripcion">Descripción de la solicitud:</label>
                 <textarea class="form-control" id="descripcion" readonly th:text="${solicitud.descripcion}"></textarea>
@@ -70,7 +70,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-md-12">
         <div class="card">
           <div>
@@ -83,7 +83,7 @@
             </div>
           </div>
         </div>
-        <!-- BEGIN MODAL -->
+        <!--  MODAL -->
         <div aria-hidden="true" aria-labelledby="eventModalLabel" class="modal fade" id="eventModal" tabindex="-1">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -94,87 +94,90 @@
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
               </div>
               <div class="modal-body">
-                <div class="row">
-                  <div class="col-md-12">
-                    <label class="form-label">Nombre del evento</label>
-                    <input class="form-control" id="event-title" type="text"/>
-                  </div>
-                  
-                  <div class="col-md-12">
-                    <label class="form-label">Fecha de uso:</label>
-                    <input class="form-control" id="event-date" type="date"/>
-                  </div>
-                  
-                  <div class="col-md-6">
-                    <label class="form-label">Hora inicio:</label>
-                    <input class="form-control" id="event-hour-start" type="time"/>
-                  </div>
-                  
-                  <div class="col-md-6">
-                    <label class="form-label">Hora fin:</label>
-                    <input class="form-control" id="event-hour-end" type="time"/>
-                  </div>
-                  
-                  <div class="col-md-12">
-                    <label class="form-label">Laboratorios disponibles:</label>
-                    <select  id="event-laboratorio" class="form-select">
-                      <option value="null" hidden>--SELECCIONE--</option>
-                      <option th:each="laboratorio : ${listaLaboratorio}" th:value="${laboratorio.idLaboratorio}">
-                        <span th:text="${laboratorio.nombre}"></span>
-                        <span class="text-muted bg-light-info rounded-pill px-2 py-1" th:text="${laboratorio.horario}"></span>
-                      </option>
-                    </select>
-                  </div>
-                  
-                  <div class="col-md-12 mt-4">
-                    <div><label class="form-label">Estado</label></div>
-                    <input type="hidden" id="event-estado">
-                    <div class="d-flex">
-                      <div class="n-chk">
-                        <div class="form-check form-check-primary form-check-inline">
-                          <input class="form-check-input" id="modalWarning" name="event-level" type="radio"
-                                 value="PENDIENTE"/>
-                          <label class="form-check-label" for="modalWarning">PENDIENTE</label>
+                <form>
+                    <input type="hidden" name="reservaIdReserva" id="reservaIdReserva" th:value="${solicitud.reserva.idReserva}"/>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label class="form-label">Nombre del evento</label>
+                      <textarea class="form-control" name="reservaNombreActividad" id="event-title" type="text"></textarea>
+                    </div>
+
+                    <div class="col-md-12">
+                      <label class="form-label">Fecha de uso:</label>
+                      <input class="form-control" name="fechaUso" id="event-date" type="date"/>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label">Hora inicio:</label>
+                      <input class="form-control" name="horaInicio" id="event-hour-start" type="time"/>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label">Hora fin:</label>
+                      <input class="form-control" name="horaFin" id="event-hour-end" type="time"/>
+                    </div>
+
+                    <div class="col-md-12">
+                      <label class="form-label">Laboratorios disponibles:</label>
+                      <select name="laboratorioIdLaboratorio"  id="laboratorioIdLaboratorio" class="form-select">
+                        <option value="null" hidden>--SELECCIONE--</option>
+                        <option th:each="laboratorio : ${listaLaboratorio}" th:value="${laboratorio.idLaboratorio}">
+                          <span th:text="${laboratorio.nombre}"></span>
+                          <span class="text-muted bg-light-info rounded-pill px-2 py-1" th:text="${laboratorio.horario}"></span>
+                        </option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-12 mt-4">
+                      <div><label class="form-label">Estado</label></div>
+                      <input name="estadoReserva" type="hidden" id="event-estado">
+                      <div class="d-flex">
+                        <div class="n-chk">
+                          <div class="form-check form-check-primary form-check-inline">
+                            <input class="form-check-input" id="modalWarning" name="estadoReserva" type="radio"
+                                   value="PENDIENTE"/>
+                            <label class="form-check-label" for="modalWarning">PENDIENTE</label>
+                          </div>
                         </div>
-                      </div>
-                      <div class="n-chk">
-                        <div class="form-check form-check-info form-check-inline">
-                          <input class="form-check-input" id="modalPrimary" name="event-level" type="radio"
-                                 value="EN_USO"/>
-                          <label class="form-check-label" for="modalPrimary">EN_USO</label>
+                        <div class="n-chk">
+                          <div class="form-check form-check-info form-check-inline">
+                            <input class="form-check-input" id="modalPrimary" name="estadoReserva" type="radio"
+                                   value="EN_USO"/>
+                            <label class="form-check-label" for="modalPrimary">EN_USO</label>
+                          </div>
                         </div>
-                      </div>
-                      <div class="n-chk">
-                        <div class="form-check form-check-success form-check-inline">
-                          <input class="form-check-input" id="modalSuccess" name="event-level" type="radio"
-                                 value="FINALIZADA"/>
-                          <label class="form-check-label" for="modalSuccess">FINALIZADA</label>
+                        <div class="n-chk">
+                          <div class="form-check form-check-success form-check-inline">
+                            <input class="form-check-input" id="modalSuccess" name="estadoReserva" type="radio"
+                                   value="FINALIZADA"/>
+                            <label class="form-check-label" for="modalSuccess">FINALIZADA</label>
+                          </div>
                         </div>
-                      </div>
-                      <div class="n-chk">
-                        <div class="form-check form-check-danger form-check-inline">
-                          <input class="form-check-input" id="modalDanger" name="event-level" type="radio"
-                                 value="CANCELADA"/>
-                          <label class="form-check-label" for="modalDanger">CANCELADA</label>
+                        <div class="n-chk">
+                          <div class="form-check form-check-danger form-check-inline">
+                            <input class="form-check-input" id="modalDanger" name="estadoReserva" type="radio"
+                                   value="CANCELADA"/>
+                            <label class="form-check-label" for="modalDanger">CANCELADA</label>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <!--<div class="col-md-12 d-none">
-                    <div class="">
-                      <label class="form-label">Fecha y hora inicio</label>
-                      <input class="form-control" id="event-start-date" type="text"/>
+
+                    <!--<div class="col-md-12 d-none">
+                      <div class="">
+                        <label class="form-label">Fecha y hora inicio</label>
+                        <input class="form-control" id="event-start-date" type="text"/>
+                      </div>
                     </div>
+
+                    <div class="col-md-12 d-none">
+                      <div class="">
+                        <label class="form-label">Fecha y hora fin</label>
+                        <input class="form-control" id="event-end-date" type="text"/>
+                      </div>
+                    </div>-->
                   </div>
-                  
-                  <div class="col-md-12 d-none">
-                    <div class="">
-                      <label class="form-label">Fecha y hora fin</label>
-                      <input class="form-control" id="event-end-date" type="text"/>
-                    </div>
-                  </div>-->
-                </div>
+                </form>
               </div>
               <div class="modal-footer">
                 <button class="btn" data-bs-dismiss="modal" type="button">
@@ -183,7 +186,7 @@
                 <button class="btn btn-success btn-update-event" data-fc-event-public-id="" type="button">
                   Actualizar
                 </button>
-                <button class="btn btn-primary btn-add-event" type="button">
+                <button class="btn btn-primary btn-add-event" type="submit">
                   Agregar
                 </button>
               </div>
@@ -240,14 +243,14 @@
                       </div>
                     </div>
                   </div>
-                  
+
                   <div class="col-md-12 d-none">
                     <div class="">
                       <label class="form-label">Enter Start Date</label>
                       <input class="form-control" id="event-start-date" type="text"/>
                     </div>
                   </div>
-                  
+
                   <div class="col-md-12 d-none">
                     <div class="">
                       <label class="form-label">Enter End Date</label>
@@ -274,8 +277,8 @@
       </div>
     </div>
   </div>
-  
-  
+
+
   <!--    AQUI TERMINA TU LISTA, LO DEMAS COPIAS Y PEGAS-->
 </div>
 <div layout:fragment="script">
@@ -283,13 +286,13 @@
   <script th:src="@{/dist/libs/sweetalert2/dist/sweetalert2.min.js}"></script>
   <script th:src="@{/dist/libs/moment/min/moment.min.js}"></script>
   <script th:src="@{/dist/libs/fullcalendar/index.global.min.js}"></script>
-  
-  
+
+
   <script>
     "use strict";
     /*========Calender Js=========*/
     /*==========================*/
-    
+
     document.addEventListener("DOMContentLoaded", async function () {
       /*=================*/
       //  Calender Date letiable
@@ -306,20 +309,20 @@
           return `${_getUpdatedMonthValue}`;
         }
       }
-      
+
       /*=================*/
       // Calender Modal Elements
       /*=================*/
       /*const getModalStartDateEl = document.querySelector("#event-start-date");
       const getModalEndDateEl = document.querySelector("#event-end-date");*/
-      
+
       const getModalTitleEl = document.querySelector("#event-title");
       const getModalDateEl = document.querySelector("#event-date");
       const getModalStartHourEl = document.querySelector("#event-hour-start")
       const getModalEndHourEl = document.querySelector("#event-hour-end")
       const getModalLaboratorioEl = document.querySelector("#event-laboratorio");
       const getModalEstadoEl = document.querySelector("#event-estado");
-      
+
       const getModalAddBtnEl = document.querySelector(".btn-add-event");
       const getModalUpdateBtnEl = document.querySelector(".btn-update-event");
       const calendarsEvents = {
@@ -348,77 +351,18 @@
         center: "title",
         right: "dayGridMonth,timeGridWeek,timeGridDay",
       };
-      
-      
+
+
       const response = await fetch(`/reserva/lista-eventos-calendario`)
       const data = await response.json();
       let calendarEventsList = data;
-      
+
       /*let calendarEventsList = [
         {
           id: 1,
           title: "Event Conf.",
           start: `${newDate.getFullYear()}-${getDynamicMonth()}-01`,
           extendedProps: {calendar: "Danger"},
-        },
-        {
-          id: 2,
-          title: "Seminar #4",
-          start: `${newDate.getFullYear()}-${getDynamicMonth()}-07`,
-          end: `${newDate.getFullYear()}-${getDynamicMonth()}-10`,
-          extendedProps: {calendar: "Success"},
-        },
-        {
-          groupId: "999",
-          id: 3,
-          title: "Meeting #5",
-          start: `${newDate.getFullYear()}-${getDynamicMonth()}-09T16:00:00`,
-          extendedProps: {calendar: "Primary"},
-        },
-        {
-          groupId: "999",
-          id: 4,
-          title: "Submission #1",
-          start: `${newDate.getFullYear()}-${getDynamicMonth()}-16T16:00:00`,
-          extendedProps: {calendar: "Warning"},
-        },
-        {
-          id: 5,
-          title: "Seminar #6",
-          start: `${newDate.getFullYear()}-${getDynamicMonth()}-11`,
-          end: `${newDate.getFullYear()}-${getDynamicMonth()}-13`,
-          extendedProps: {calendar: "Danger"},
-        },
-        {
-          id: 6,
-          title: "Meeting 3",
-          start: `${newDate.getFullYear()}-${getDynamicMonth()}-12T10:30:00`,
-          end: `${newDate.getFullYear()}-${getDynamicMonth()}-12T12:30:00`,
-          extendedProps: {calendar: "Success"},
-        },
-        {
-          id: 7,
-          title: "Meetup #",
-          start: `${newDate.getFullYear()}-${getDynamicMonth()}-12T12:00:00`,
-          extendedProps: {calendar: "Primary"},
-        },
-        {
-          id: 8,
-          title: "Submission",
-          start: `${newDate.getFullYear()}-${getDynamicMonth()}-12T14:30:00`,
-          extendedProps: {calendar: "Warning"},
-        },
-        {
-          id: 9,
-          title: "Attend event",
-          start: `${newDate.getFullYear()}-${getDynamicMonth()}-13T07:00:00`,
-          extendedProps: {calendar: "Success"},
-        },
-        {
-          id: 10,
-          title: "Project submission #2",
-          start: `${newDate.getFullYear()}-${getDynamicMonth()}-28`,
-          extendedProps: {calendar: "Primary"},
         },
       ];*/
       /*=====================*/
@@ -427,9 +371,11 @@
       let calendarSelect = function (info) {
         getModalAddBtnEl.style.display = "block";
         getModalUpdateBtnEl.style.display = "none";
+        getModalTitleEl.value = document.querySelector("#nombreActividad").value;
+        getModalDateEl.value = info.startStr.split('T')[0];
+        getModalStartHourEl.value = info.startStr.split('T')[1].split('-')[0];
+        getModalEndHourEl.value = info.endStr.split('T')[1].split('-')[0];
         myModal.show();
-        /*getModalStartDateEl.value = info.startStr;
-        getModalEndDateEl.value = info.endStr;*/
       };
       /*=====================*/
       // Calendar AddEvent fn.
@@ -444,19 +390,19 @@
         getModalUpdateBtnEl.style.display = "none";
         myModal.show();
         getModalDateEl.value = new Date();
-        getModalTitleEl.value = document.querySelector("#motivo").value;
+        getModalTitleEl.value = document.querySelector("#nombreActividad").value;
         /*getModalStartDateEl.value = combineDate;*/
       };
-      
+
       /*=====================*/
       // Calender Event Function
       /*=====================*/
       const calendarEventClick = function (info) {
         let eventObj = info.event;
-        
+
         if (eventObj.url) {
           window.open(eventObj.url);
-          
+
           info.jsEvent.preventDefault();
         } else {
           let getModalEventId = eventObj._def.publicId;
@@ -464,19 +410,21 @@
           let getModalCheckedRadioBtnEl = document.querySelector(
               `input[value="${getModalEventLevel}"]`
           );
-          
+          const getModalStartHourEl = document.querySelector("#event-hour-start")
+          const getModalEndHourEl = document.querySelector("#event-hour-end")
           getModalTitleEl.value = eventObj.title;
           if(getModalCheckedRadioBtnEl) getModalCheckedRadioBtnEl.checked = true;
           getModalUpdateBtnEl.setAttribute(
               "data-fc-event-public-id",
               getModalEventId
           );
+          getModalTitleEl.value = document.querySelector("#nombreActividad").value;
           getModalAddBtnEl.style.display = "none";
           getModalUpdateBtnEl.style.display = "block";
           myModal.show();
         }
       };
-      
+
       /*=====================*/
       // Active Calender
       /*=====================*/
@@ -505,7 +453,7 @@
             "event-fc-color fc-bg-" + getColorValue,
           ];
         },
-        
+
         eventClick: calendarEventClick,
         windowResize: function (arg) {
           if (checkWidowWidth()) {
@@ -517,7 +465,7 @@
           }
         },
       });
-      
+
       /*=====================*/
       // Update Calender Event
       /*=====================*/
@@ -528,12 +476,12 @@
         let getModalUpdatedCheckedRadioBtnEl = document.querySelector(
             'input[name="event-level"]:checked'
         );
-        
+
         let getModalUpdatedCheckedRadioBtnValue =
             getModalUpdatedCheckedRadioBtnEl !== null
                 ? getModalUpdatedCheckedRadioBtnEl.value
                 : "";
-        
+
         getEvent.setProp("title", getTitleUpdatedValue);
         getEvent.setExtendedProp("calendar", getModalUpdatedCheckedRadioBtnValue);
         myModal.hide();
@@ -543,28 +491,28 @@
       /*=====================*/
       getModalAddBtnEl.addEventListener("click", async function () {
         let getModalCheckedRadioBtnEl = document.querySelector('input[name="event-level"]:checked');
-        
+
         let getModalCheckedRadioBtnValue = getModalCheckedRadioBtnEl !== undefined && getModalCheckedRadioBtnEl !== null ? getModalCheckedRadioBtnEl.value : "";
-        
+
         let modalFecha = getModalDateEl.value;
-        
+
         let [horaInicio, minutoInicio] = getModalStartHourEl.value.split(":");
         let fechaHoraInicio = new Date(modalFecha);
         fechaHoraInicio.setHours(parseInt(horaInicio));
         fechaHoraInicio.setMinutes(parseInt(minutoInicio));
-        
+
         let fechaHoraFin = new Date(modalFecha);
         let [horaFin, minutoFin] = getModalEndHourEl.value.split(":");
         fechaHoraFin.setHours(parseInt(horaFin));
         fechaHoraFin.setMinutes(parseInt(minutoFin));
-        
+
         let detalleReserva = {
           title: getModalTitleEl.value,
           start: fechaHoraInicio,
           end: fechaHoraFin,
           /*extendedProps: {calendar: getModalCheckedRadioBtnValue},*/
         };
-        
+
         /*const response = await axios.post(`/reserva/api/v1/detalle-reserva`, detalleReserva);
         if(response.status !== 200) return;
         const data = response.data;*/
@@ -582,7 +530,7 @@
       // Calendar Init
       /*=====================*/
       calendar.render();
-      let myModal = new bootstrap.Modal(document.getElementById("eventModal"));
+      let myModal = new bootstrap.Modal(document.querySelector("#eventModal"));
       let modalToggle = document.querySelector(".fc-addEventButton-button ");
       document
           .getElementById("eventModal")
@@ -592,8 +540,28 @@
             getModalStartHourEl.value = "";
             getModalEndHourEl.value = "";
           });
+
+      const formReserva = document.querySelector('#eventModal form');
+      const btnFormReserva = document.querySelector('#eventModal button[type="submit"]');
+
+      btnFormReserva.addEventListener('click', async () => {
+
+        const formData = new FormData(formReserva);
+        const data = Object.fromEntries(formData);
+        console.log(data);
+
+        const response = await fetch('/reserva', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)}
+        );
+
+        if(response.status !== 200) return;
+        const responseData = await response.json();
+        console.log(responseData);
+      })
+
     });
-  
   </script>
 </div>
 </body>

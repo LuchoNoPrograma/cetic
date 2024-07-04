@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uap.fit.cetic.dto.SolicitudDto;
+import uap.fit.cetic.model.dao.IReservaDao;
 import uap.fit.cetic.model.dao.ISolicitudDao;
 import uap.fit.cetic.model.entity.*;
 import uap.fit.cetic.model.enums.EstadoReserva;
@@ -27,6 +28,7 @@ public class SolicitudServiceImpl implements ISolicitudService {
   private final IDetalleServicioService detalleServicioService;
   private final IPagoService pagoService;
   private final ITecnicoService tecnicoService;
+  private final IReservaDao reservaDao;
 
   @Override
   public Solicitud buscarPorId(Long id) {
@@ -57,11 +59,18 @@ public class SolicitudServiceImpl implements ISolicitudService {
 
     if (solicitudDto.getTipoSolicitud() == TipoSolicitud.RESERVA_DE_LABORATORIO) {
       solicitud.setListaServicio(null);
-      Reserva reserva = modelMapper.map(solicitudDto.getReserva(), Reserva.class);
-      solicitud.setReserva(reserva);
-      reserva.setEstadoReserva(EstadoReserva.PENDIENTE);
+      solicitud.setReserva(null);
+      solicitud.setEstadoSolicitud(EstadoSolicitud.PENDIENTE);
+      solicitud.setFechaSolicitud(LocalDateTime.now());
+      solicitud = solicitudDao.save(solicitud);
 
-      this.guardar(solicitud);
+      Reserva reserva = modelMapper.map(solicitudDto.getReserva(), Reserva.class);
+      reserva.setEstadoReserva(EstadoReserva.PENDIENTE);
+      reserva.setSolicitud(solicitud);
+      reserva = reservaDao.save(reserva);
+
+      solicitud.setReserva(reserva);
+      solicitud = solicitudDao.save(solicitud);
     } else {
       solicitud.setReserva(null);
       if (solicitud.getFechaSolicitud() == null) solicitud.setFechaSolicitud(LocalDateTime.now());
